@@ -24,8 +24,6 @@ public class Data {
 
     private Boolean processed;
 
-    //test
-
     /**
      * Constructs a new Data object.
      */
