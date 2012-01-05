@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:os-core="http://www.openspaces.org/schema/core"
        xmlns:os-events="http://www.openspaces.org/schema/events"
        xmlns:os-remoting="http://www.openspaces.org/schema/remoting"
        xmlns:os-sla="http://www.openspaces.org/schema/sla"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.openspaces.org/schema/core http://www.openspaces.org/schema/8.0/core/openspaces-core.xsd
        http://www.openspaces.org/schema/events http://www.openspaces.org/schema/8.0/events/openspaces-events.xsd
        http://www.openspaces.org/schema/remoting http://www.openspaces.org/schema/8.0/remoting/openspaces-remoting.xsd
@@ -18,15 +20,16 @@
     <bean id="propertiesConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties">
             <props>
-                <prop key="numberOfTypes">100</prop>
+                <prop key="numberOfUsers">100</prop>
             </props>
         </property>
     </bean>
 
-    <!--
-        Enables the usage of @GigaSpaceContext annotation based injection.
-    -->
-    <os-core:giga-space-context/>
+    <!-- Enable scan for OpenSpaces and Spring components -->
+    <context:component-scan base-package="org.openspaces.bigdata.common" />
+	<!--  Enables Spring Annotation configuration  -->
+<!--     <context:annotation-config /> -->
+    
 
     <!--
         A bean representing a space (an IJSpace implementation).
@@ -44,7 +47,17 @@
         The Data feeder bean, writing new Data objects to the space in a constant interval.
     -->
     <bean id="dataFeeder" class="org.openspaces.bigdata.feeder.Feeder" depends-on="gigaSpace">
-        <property name="numberOfTypes" value="${numberOfTypes}" />
+        <property name="numberOfUsers" value="${numberOfUsers}" />
     </bean>
+
+	<bean id="tweetTextList" class="java.util.LinkedList">
+		<constructor-arg>
+			<list>
+				<value>hi man!</value>
+				<value>see you tonight, for sure</value>
+				<value>coming over?</value>
+			</list>
+		</constructor-arg>
+	</bean>
     
 </beans>
