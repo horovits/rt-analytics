@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
-import org.openspaces.bigdata.processor.events.LocalCountBulk;
+import org.openspaces.bigdata.processor.events.TokenCounter;
 import org.openspaces.bigdata.processor.events.TokenizedTweet;
 import org.openspaces.core.GigaSpace;
 import org.openspaces.events.EventDriven;
@@ -26,10 +26,13 @@ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
 
 @EventDriven
 @Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 5000)
-@TransactionalEvent
+@TransactionalEvent(timeout=60000)
 public class LocalTokenCounter {
 
 	private static final int LEASE_TTL = 5000;
+
+	@Resource(name = "clusteredGigaSpace")
+	GigaSpace clusteredGigaSpace;
 
 	@Resource(name = "gigaSpace")
 	GigaSpace gigaSpace;
@@ -61,10 +64,9 @@ public class LocalTokenCounter {
     }
     
     @SpaceDataEvent
-    public TokenizedTweet[] eventListener(TokenizedTweet[] tokenizedTweetArray) {
+    public void eventListener(TokenizedTweet[] tokenizedTweetArray) {
 
     	log.info("local counting of a bulk of "+tokenizedTweetArray.length+" tweets");
-    	//Map<String, Integer> tokenMap = tokenizedTweetArray[0].getTokenMap();
     	Map<String, Integer> tokenMap = new java.util.HashMap<String, Integer>();
     	for (int i = 0; i < tokenizedTweetArray.length; i++) {
     		log.info("--"+tokenizedTweetArray[i]);
@@ -76,11 +78,17 @@ public class LocalTokenCounter {
             			(tokenMap.containsKey(token) ? tokenMap.get(token)+count : count));
             }
     	}
-    	
-    	log.info("--writing LocalCountBulk of size "+tokenMap.size());
-    	gigaSpace.write(new LocalCountBulk(tokenMap),LEASE_TTL);
 
-    	return null;
+        TokenCounter[] counterArray = new TokenCounter[tokenMap.size()];
+    	int i = 0;
+        for (Map.Entry<String, Integer> entry : tokenMap.entrySet()) {
+        	String token = entry.getKey();
+        	Integer count = entry.getValue();
+        	counterArray[i++] = new TokenCounter(token, count);
+        }
+
+    	clusteredGigaSpace.writeMultiple(counterArray,LEASE_TTL);
+
     }
 
 }

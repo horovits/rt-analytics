@@ -33,7 +33,9 @@ import javax.annotation.Resource;
  */
 public class Feeder implements InitializingBean, DisposableBean {
 
-    Logger log= Logger.getLogger(this.getClass().getName());
+    private static final int NUM_THREADS = 5;
+
+	Logger log= Logger.getLogger(this.getClass().getName());
     
     private ScheduledExecutorService executorService;
 
@@ -66,7 +68,7 @@ public class Feeder implements InitializingBean, DisposableBean {
     	assert tweetTextList != null;
     	log.info("tweet list size: " +tweetTextList.size());
         log.info("--- STARTING FEEDER WITH CYCLE [" + defaultDelay + "]");
-        executorService = Executors.newScheduledThreadPool(1);
+        executorService = Executors.newScheduledThreadPool(NUM_THREADS);
         feederTask = new FeederTask();
         sf = executorService.scheduleAtFixedRate(feederTask, defaultDelay, defaultDelay,
                 TimeUnit.MILLISECONDS);

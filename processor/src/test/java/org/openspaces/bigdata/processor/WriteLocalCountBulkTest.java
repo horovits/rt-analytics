@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.runner.*;
 import static org.junit.Assert.*;
-import org.openspaces.bigdata.processor.events.LocalCountBulk;
+import org.openspaces.bigdata.processor.events.TokenCounter;
 import org.openspaces.core.GigaSpace;
 import org.openspaces.core.GigaSpaceConfigurer;
 import org.openspaces.core.space.UrlSpaceConfigurer;
@@ -40,20 +40,18 @@ public class WriteLocalCountBulkTest {
     @Test
     public void testWriteLocalCountBulk() {
     	Map<String, Integer> tokenMap = new java.util.HashMap<String, Integer>();
-       	tokenMap.put("foo", 3);
-       	tokenMap.put("bar", 8);
-       	log.info("writing LocalCountBulk");
-    	gigaSpace.write(new LocalCountBulk(tokenMap));
+    	gigaSpace.write(new TokenCounter("foo", 3));
+    	gigaSpace.write(new TokenCounter("bar", 8));
 
-       	log.info("reading LocalCountBulk");
-       	LocalCountBulk template = new LocalCountBulk();
-    	LocalCountBulk ret = gigaSpace.read(template);
+       	log.info("reading TokenCounter");
+       	TokenCounter template = new TokenCounter();
+       	TokenCounter[] ret = gigaSpace.readMultiple(template);
     	
     	assertNotNull(ret);
-    	assertNotNull(ret.getId());
-    	assertNotNull(ret.getTokenMap());
-    	assertEquals(2, ret.getTokenMap().size());
-    	
+    	assertEquals(2, ret.length);
+    	assertNotNull(ret[0].getToken());
+    	assertNotNull(ret[1].getToken());
+  	
     }
 	
 }

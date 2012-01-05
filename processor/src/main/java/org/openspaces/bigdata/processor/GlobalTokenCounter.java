@@ -1,78 +1,68 @@
 package org.openspaces.bigdata.processor;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
-import org.openspaces.bigdata.processor.events.LocalCountBulk;
+import org.openspaces.bigdata.processor.events.TokenCounter;
 import org.openspaces.core.GigaMap;
-import org.openspaces.core.cluster.ClusterInfo;
-import org.openspaces.core.cluster.ClusterInfoContext;
 import org.openspaces.events.EventDriven;
 import org.openspaces.events.EventTemplate;
 import org.openspaces.events.TransactionalEvent;
 import org.openspaces.events.adapter.SpaceDataEvent;
-import org.openspaces.events.notify.Notify;
-import org.openspaces.events.notify.NotifyType;
+import org.openspaces.events.polling.Polling;
+import org.openspaces.events.polling.ReceiveHandler;
+import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
+import org.openspaces.events.polling.receive.ReceiveOperationHandler;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @EventDriven
-@Notify(gigaSpace = "clusteredGigaSpace"/*, guaranteed = true*/)
-@NotifyType(write = true)
+@Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout=1000)
 @TransactionalEvent
 public class GlobalTokenCounter {
 
+    private static final int BATCH_SIZE = 100;
+
     Logger log= Logger.getLogger(this.getClass().getName());
 
-    @ClusterInfoContext
-    private ClusterInfo clusterInfo;
-    
     @Resource
     GigaMap gigaMap;
 
-	@javax.annotation.PostConstruct
-	void postConstruct() {
-		log.info(this.getClass().getName()+" initialized");
-	}
+	@ReceiveHandler 
+    ReceiveOperationHandler receiveHandler() {
+        MultiTakeReceiveOperationHandler receiveHandler = new MultiTakeReceiveOperationHandler();
+        receiveHandler.setMaxEntries(BATCH_SIZE);
+        receiveHandler.setNonBlocking(true); 
+        receiveHandler.setNonBlockingFactor(1); 
+        return receiveHandler;
+    }
 
     @EventTemplate
-    LocalCountBulk localCountBulk() {
-    	LocalCountBulk template = new LocalCountBulk();
+    TokenCounter tokenCounter() {
+    	TokenCounter template = new TokenCounter();
     	return template;
     }
     
     @SpaceDataEvent
-    LocalCountBulk eventListener(LocalCountBulk bulk) {
-        if (bulk.getTokenMap() == null) log.severe("LocalCountBulk w/ null tokenMap");
-    	log.info("processing LocalCountBulk of bulk size "+bulk.getTokenMap().size());
-    	for (Map.Entry<String, Integer> entry : bulk.getTokenMap().entrySet()) {
-        	String token = entry.getKey();
-        	Integer count = entry.getValue();
-        	
-        	if (isTokenLocal(token)) {
-        		log.info("incementing local token "+token+" by "+count);
-        		incrementLocalToken(token, count);
-        	}
-        }
-        
-        return null;
+    public void eventListener(TokenCounter counter) {
+    	String token = counter.getToken();
+    	Integer count = counter.getCount();
+    	log.info("incementing local token "+token+" by "+count);
+    	incrementLocalToken(token, count);
     }
 
-	private boolean isTokenLocal(String token) {
-		final int instanceIdZeroBased = clusterInfo.getInstanceId() - 1;
-		return (token.hashCode() % clusterInfo.getNumberOfInstances() 
-				== instanceIdZeroBased);
-	}
-
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, isolation  = Isolation.READ_COMMITTED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation  = Isolation.READ_COMMITTED)
     private void incrementLocalToken(String token, Integer count) {
-//		gigaMap.lock(token);
-		Integer globalCount = gigaMap.containsKey(token) ? (Integer)gigaMap.get(token)+count : count;
-		gigaMap.put(token, globalCount);
-//		gigaMap.unlock(token);
-	}
+    	try {
+    		gigaMap.lock(token);
+    		Integer globalCount = gigaMap.containsKey(token) ? (Integer)gigaMap.get(token)+count : count;
+    		gigaMap.put(token, globalCount);
+    		gigaMap.unlock(token);
+    	} catch (Exception e) {
+    		gigaMap.unlock(token);
+    	}
+    }
 
 }

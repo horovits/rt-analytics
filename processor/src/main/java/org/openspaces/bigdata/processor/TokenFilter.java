@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
-import org.openspaces.bigdata.processor.events.LocalCountBulk;
 import org.openspaces.bigdata.processor.events.TokenizedTweet;
 import org.openspaces.core.GigaSpace;
 import org.openspaces.events.EventDriven;
@@ -24,7 +23,7 @@ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
  *
  */
 @EventDriven
-@Polling(gigaSpace = "gigaSpace", concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 5000)
+@Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout = 5000)
 @TransactionalEvent
 public class TokenFilter {
 

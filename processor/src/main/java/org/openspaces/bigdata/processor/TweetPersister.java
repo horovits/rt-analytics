@@ -25,7 +25,7 @@ import com.j_spaces.core.client.SQLQuery;
  */
 
 @EventDriven
-@Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 10000)
+@Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout = 10000)
 @TransactionalEvent
 public class TweetPersister {
 	
@@ -72,10 +72,6 @@ public class TweetPersister {
     public SpaceDocument[] eventListener(SpaceDocument[] tweetArray) {
     	
     	log.info("writing behind a bulk of "+tweetArray.length+" tweets to backend persistence store");
-//    	for (int i = 0; i < tweetArray.length; i++) {
-//    		log.fine("--"+tweetArray[i]);
-//    		tweetArray[i].setProperty("Persisted", true);
-//    	}
 
 		try {
 			persister.writeBulk(tweetArray); //TODO: remove when real persistence is set
