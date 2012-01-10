@@ -25,7 +25,7 @@ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
  */
 
 @EventDriven
-@Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 5000)
+@Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 15000)
 @TransactionalEvent(timeout=60000)
 public class LocalTokenCounter {
 
@@ -39,7 +39,7 @@ public class LocalTokenCounter {
 
     Logger log= Logger.getLogger(this.getClass().getName());
 
-    private static final int BATCH_SIZE = 100;
+    private static final int BATCH_SIZE = 5;
 	
 	@javax.annotation.PostConstruct
 	void postConstruct() {
