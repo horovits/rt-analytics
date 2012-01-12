@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.openspaces.events.EventDriven;
 import org.openspaces.events.EventTemplate;
@@ -49,13 +50,11 @@ public class TweetPersister {
 
     private static final int BATCH_SIZE = 100; //TODO replace w/ Spring3 EL using @Value to inject property, instead of constant
     
-    private ExternalPersistence persister; //TODO replace w/ real persistence
+    @Resource
+    private ExternalPersistence persister;
 	
 	@PostConstruct
 	void postConstruct() throws IOException {
-		log.info("initializing connection to back-end persistence store");
-		persister = new FileExternalPersistence(new java.io.File("tweetRepo.txt")); //TODO replace w/ real persistence
-		
 		log.info(this.getClass().getName()+" initialized");
 	}
 
@@ -68,15 +67,6 @@ public class TweetPersister {
         return receiveHandler;
     }
 
-
-//    @EventTemplate
-//    SpaceDocument processedTweet() {
-//    	DocumentProperties properties = new DocumentProperties()
-//    	.setProperty("Processed", true);
-//    	SpaceDocument template = new SpaceDocument("Tweet", properties);
-//    	return template;
-//    }
-    
     @EventTemplate
     SQLQuery<SpaceDocument> processedTweet() {
     	SQLQuery<SpaceDocument> query = 

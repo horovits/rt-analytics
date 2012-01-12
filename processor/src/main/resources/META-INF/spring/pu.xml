@@ -67,4 +67,7 @@
 
 	<os-core:giga-map id="gigaMap" map="map" tx-manager="transactionManager"/>
 
+	<bean id="fileExternalPersistence" class="org.openspaces.bigdata.processor.FileExternalPersistence">
+		<constructor-arg index="0" value="tweetRepo.txt"/>
+	</bean>
 </beans>

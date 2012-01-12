@@ -34,6 +34,10 @@ public class FileExternalPersistence implements ExternalPersistence {
 
 	private File file;
 	
+	public FileExternalPersistence(String fileName) throws IOException {
+		this(new java.io.File(fileName));
+	}
+	
 	public FileExternalPersistence(File file) throws IOException {
 		this.file = file;
 		log.info("using file persistence: "+file.getAbsolutePath());
