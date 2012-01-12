@@ -49,7 +49,7 @@ public class TweetPersister {
 
     private static final int BATCH_SIZE = 100; //TODO replace w/ Spring3 EL using @Value to inject property, instead of constant
     
-    private FileExternalPersistence persister; //TODO replace w/ real persistence
+    private ExternalPersistence persister; //TODO replace w/ real persistence
 	
 	@PostConstruct
 	void postConstruct() throws IOException {
