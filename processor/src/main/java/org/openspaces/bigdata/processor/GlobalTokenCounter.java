@@ -71,14 +71,9 @@ public class GlobalTokenCounter {
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation  = Isolation.READ_COMMITTED)
     private void incrementLocalToken(String token, Integer count) {
-    	try {
-    		gigaMap.lock(token);
-    		Integer globalCount = gigaMap.containsKey(token) ? (Integer)gigaMap.get(token)+count : count;
-    		gigaMap.put(token, globalCount);
-    		gigaMap.unlock(token);
-    	} catch (Exception e) {
-    		gigaMap.unlock(token);
-    	}
+    	Integer globalCount = gigaMap.containsKey(token) ? (Integer)gigaMap.get(token)+count : count;
+    	gigaMap.put(token, globalCount);
+    	log.info("+++ token="+token+" count="+(Integer)gigaMap.get(token));
     }
 
 }
