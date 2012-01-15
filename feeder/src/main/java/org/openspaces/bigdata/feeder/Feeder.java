@@ -36,22 +36,17 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 /**
- * A feeder bean starts a scheduled task that writes a new Data objects to the space
- * (in an unprocessed state).
- *
- * <p>The space is injected into this bean using OpenSpaces support for @GigaSpaceContext
- * annotation.
- *
- * <p>The scheduling uses the java.util.concurrent Scheduled Executor Service. It
- * is started and stopped based on Spring life cycle events.
- *
+ * A feeder bean that generates and feeds simulated tweets to a remote space periodically using scheduled task.
+ * The feeder uses tweetTextList, a predefined Spring-injected list of tweet texts, 
+ * and numberOfUsers for generating user ids. 
+ * 
  * @author Dotan Horovits
  */
 public class Feeder implements InitializingBean, DisposableBean {
 
     private static final int NUM_THREADS = 5;
 
-	Logger log= Logger.getLogger(this.getClass().getName());
+	private Logger log= Logger.getLogger(this.getClass().getName());
     
     private ScheduledExecutorService executorService;
 
