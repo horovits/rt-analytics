@@ -80,7 +80,7 @@ public class TweetPersister {
     	log.info("writing behind a bulk of "+tweetArray.length+" tweets to backend persistence store");
 
 		try {
-			persister.writeBulk(tweetArray); //TODO: remove when real persistence is set
+			persister.writeBulk(tweetArray);
 		} catch (IOException e) {
 			log.severe("error persisting tweet bulk: "+e.getMessage());
 		}
