@@ -47,6 +47,8 @@ import com.j_spaces.core.client.SQLQuery;
 @TransactionalEvent(timeout = 100)
 public class TweetParser {
 	
+	private static final int MIN_TOKEN_LENGTH = 3;
+
 	@Resource(name = "clusteredGigaSpace")
 	GigaSpace clusteredGigaSpace;
 
@@ -91,7 +93,8 @@ public class TweetParser {
     	StringTokenizer st = new StringTokenizer(text,"\"{}[]:;|<>?`'.,/~!@#$%^&*()_-+= \t\n\r\f\\");
 
     	while(st.hasMoreTokens()) { 
-    		String token = st.nextToken(); 
+    		String token = st.nextToken();
+    		if (token.length() < MIN_TOKEN_LENGTH) continue;
         	Integer count = tokenMap.get(token);
         	count = (count == null? 1 : count+1);
         	tokenMap.put(token, count);
