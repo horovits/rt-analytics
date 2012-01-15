@@ -46,10 +46,16 @@
     <!--
         The Data feeder bean, writing new Data objects to the space in a constant interval.
     -->
-    <bean id="dataFeeder" class="org.openspaces.bigdata.feeder.Feeder" depends-on="gigaSpace">
+<!-- 
+    <bean id="simulatedTweetFeeder" class="org.openspaces.bigdata.feeder.Feeder" depends-on="gigaSpace">
         <property name="numberOfUsers" value="${numberOfUsers}" />
     </bean>
-
+ -->
+ 	<bean id="tweetFeeder" class="org.openspaces.bigdata.feeder.TweetFeeder">
+ 		<property name="delay" value="1000"/>
+ 		<property name="period" value="1000"/>
+ 	</bean>
+	
 	<bean id="tweetTextList" class="java.util.LinkedList">
 		<constructor-arg>
 			<list>
