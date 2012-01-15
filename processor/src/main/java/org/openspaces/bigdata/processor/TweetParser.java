@@ -88,7 +88,7 @@ public class TweetParser {
 
     public static Map<String, Integer> tokenize(String text) {
     	Map<String, Integer> tokenMap = new java.util.HashMap<String, Integer>();
-    	StringTokenizer st = new StringTokenizer(text);
+    	StringTokenizer st = new StringTokenizer(text,"\"{}[]:;|<>?`'.,/~!@#$%^&*()_-+= \t\n\r\f\\");
 
     	while(st.hasMoreTokens()) { 
     		String token = st.nextToken(); 
