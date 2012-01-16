@@ -16,9 +16,13 @@
 
 package org.openspaces.bigdata.processor;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.openspaces.bigdata.processor.events.TokenizedTweet;
@@ -43,8 +47,6 @@ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
 @TransactionalEvent
 public class TokenFilter {
 
-	private static final int LEASE_TTL = 5000;
-
 	@Resource(name = "gigaSpace")
 	GigaSpace gigaSpace;
 
@@ -52,7 +54,7 @@ public class TokenFilter {
 
 	private static final int BATCH_SIZE = 100;
 
-	@javax.annotation.PostConstruct
+	@PostConstruct
 	void postConstruct() {
 		log.info(this.getClass().getName()+" initialized");
 	}
@@ -90,8 +92,18 @@ public class TokenFilter {
 	}
 
 	private boolean isTokenRequireFilter(String token) {
-		// TODO implement filtering logic
-		return false;
+		final String[] englishPrepositionsArray = new String[]{
+				"aboard","about","above","across","after","against","along","amid","","","",
+				"among","anti","around","as","at","before","behind","below","beneath","beside",
+				"besides","between","beyond","but","by","concerning","considering","despite","down",
+				"during","except","excepting","excluding","following","for","from","in","inside",
+				"into","like","minus","near","of","off","on","onto","opposite","outside",
+				"over","past","per","plus","regarding","round","save","since","than","through",
+				"to","toward","under","underneath","unlike","until","up","upon","versus","via",
+				"with","within","without"
+				};
+		final Set<String> filterTokensSet = new HashSet<String>(Arrays.asList(englishPrepositionsArray));
+		return (filterTokensSet.contains(token));
 	}
 
 }
