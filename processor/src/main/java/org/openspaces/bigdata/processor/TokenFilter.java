@@ -1,23 +1,24 @@
 /*
-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.openspaces.bigdata.processor;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -37,7 +38,8 @@ import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
 import org.openspaces.events.polling.receive.ReceiveOperationHandler;
 
 /**
- * This polling container processor filters out non-informative tokens, such as prepositions
+ * Event polling container processor filters out non-informative tokens, such as prepositions, 
+ * from non-filtered {@link TokenizedTweet} instances.
  * 
  * @author Dotan Horovits
  *
@@ -69,6 +71,10 @@ public class TokenFilter {
 	}
 
 
+	/**
+	 * This method returns the template of a non-filtered {@link TokenizedTweet}. 
+	 * @return template for the event container
+	 */
 	@EventTemplate
 	TokenizedTweet tokenizedNonFilteredTweet() {
 		TokenizedTweet template = new TokenizedTweet();
@@ -76,24 +82,34 @@ public class TokenFilter {
 		return template;
 	}
 
+	/**
+	 * Event handler that receives a {@link TokenizedTweet} and filters out non-informative tokens.
+	 * Filtering is performed using {@link #isTokenRequireFilter(String))}
+	 * @param tokenizedTweet
+	 * @return the input tokenizedTweet after modifications
+	 */
 	@SpaceDataEvent
 	public TokenizedTweet eventListener(TokenizedTweet tokenizedTweet) {
 		log.info("filtering tweet "+tokenizedTweet.getId());
-		Map<String, Integer> tokenMap = tokenizedTweet.getTokenMap();
+		Map<String, Integer> tokenMap = 
+			new java.util.HashMap<String, Integer>(tokenizedTweet.getTokenMap());
 		int numTokensBefore = tokenMap.size();
-		for (String token : tokenMap.keySet()) {
-			if (isTokenRequireFilter(token))
-				tokenMap.remove(token);
+		Iterator<Map.Entry<String, Integer>> it = tokenMap.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, Integer> entry = it.next();
+			if (isTokenRequireFilter(entry.getKey()))
+				it.remove();
 		}
 		int numTokensAfter = tokenMap.size();
+		tokenizedTweet.setTokenMap(tokenMap);
 		tokenizedTweet.setFiltered(true);
-		log.info("filtered out "+(numTokensBefore-numTokensAfter)+" tokens from tweet "+tokenizedTweet.getId());
+		log.fine("filtered out "+(numTokensBefore-numTokensAfter)+" tokens from tweet "+tokenizedTweet.getId());
 		return tokenizedTweet;
 	}
 
-	private boolean isTokenRequireFilter(String token) {
+	private boolean isTokenRequireFilter(final String token) {
 		final String[] englishPrepositionsArray = new String[]{
-				"aboard","about","above","across","after","against","along","amid","","","",
+				"aboard","about","above","across","after","against","along","amid",
 				"among","anti","around","as","at","before","behind","below","beneath","beside",
 				"besides","between","beyond","but","by","concerning","considering","despite","down",
 				"during","except","excepting","excluding","following","for","from","in","inside",
@@ -101,7 +117,7 @@ public class TokenFilter {
 				"over","past","per","plus","regarding","round","save","since","than","through",
 				"to","toward","under","underneath","unlike","until","up","upon","versus","via",
 				"with","within","without"
-				};
+		};
 		final Set<String> filterTokensSet = new HashSet<String>(Arrays.asList(englishPrepositionsArray));
 		return (filterTokensSet.contains(token));
 	}

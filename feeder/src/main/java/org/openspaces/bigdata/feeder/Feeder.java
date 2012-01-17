@@ -107,7 +107,7 @@ public class Feeder implements InitializingBean, DisposableBean {
                 long toUserId = randomGenerator.nextInt((int)numberOfUsers), fromUserId  = randomGenerator.nextInt((int)numberOfUsers);
                 SpaceDocument tweet = constructTweet(counter++, tweetTextList.get(randomGenerator.nextInt(tweetTextList.size())), new Date(), toUserId, fromUserId, false);
                 gigaSpace.write(tweet);
-                log.info("--- FEEDER WROTE " + tweet);
+                log.fine("--- FEEDER WROTE " + tweet);
             } catch (SpaceInterruptedException e) {
                 // ignore, we are being shutdown
             } catch (Exception e) {

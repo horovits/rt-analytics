@@ -86,7 +86,7 @@ public class TweetFeeder {
 						List<Tweet> tweets = twitter.timelineOperations().getPublicTimeline();
 
 						for (Tweet tweet : tweets) {
-							log.info(formatter.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
+							log.fine(formatter.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
 									tweet.getId(), tweet.getFromUser(), tweet.getText()).toString());
 //							System.out.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
 //									tweet.getId(), tweet.getFromUser(), tweet.getText());

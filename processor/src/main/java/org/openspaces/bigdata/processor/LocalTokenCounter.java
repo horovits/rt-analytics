@@ -40,9 +40,15 @@ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
  *
  */
 
+/**
+ * Event polling container processor filters out non-informative tokens, such as prepositions, 
+ * from filtered {@link TokenizedTweet} instances.
+ * 
+ * @author Dotan Horovits
+ */
 @EventDriven
-@Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 15000)
-@TransactionalEvent(timeout=60000)
+@Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 10000)
+@TransactionalEvent(timeout=1000)
 public class LocalTokenCounter {
 
 	private static final int LEASE_TTL = 5000;
@@ -57,21 +63,20 @@ public class LocalTokenCounter {
 
     private static final int BATCH_SIZE = 5;
 	
-	@javax.annotation.PostConstruct
-	void postConstruct() {
-		log.info(this.getClass().getName()+" initialized");
-	}
-
 	@ReceiveHandler 
     ReceiveOperationHandler receiveHandler() {
         MultiTakeReceiveOperationHandler receiveHandler = new MultiTakeReceiveOperationHandler();
         receiveHandler.setMaxEntries(BATCH_SIZE);
-        receiveHandler.setNonBlocking(true); 
+        receiveHandler.setNonBlocking(true);
         receiveHandler.setNonBlockingFactor(1); 
         return receiveHandler;
     }
 
 
+	/**
+	 * This method returns the template of a filtered {@link TokenizedTweet}. 
+	 * @return template for the event container
+	 */
     @EventTemplate
     TokenizedTweet tokenizedFilteredTweet() {
     	TokenizedTweet template = new TokenizedTweet();
@@ -79,13 +84,18 @@ public class LocalTokenCounter {
     	return template;
     }
     
+    /**
+	 * Event handler that takes a bulk of {@link TokenizedTweet}, counts appearances of tokens in the bulk,
+	 * and generates a corresponding {@link TokenCounter} for each token.
+     * @param tokenizedTweetArray array of {@link TokenizedTweet} matching the event template
+     */
     @SpaceDataEvent
     public void eventListener(TokenizedTweet[] tokenizedTweetArray) {
 
     	log.info("local counting of a bulk of "+tokenizedTweetArray.length+" tweets");
     	Map<String, Integer> tokenMap = new java.util.HashMap<String, Integer>();
     	for (int i = 0; i < tokenizedTweetArray.length; i++) {
-    		log.info("--"+tokenizedTweetArray[i]);
+    		log.fine("--processing "+tokenizedTweetArray[i]);
             for (Map.Entry<String, Integer> entry : tokenizedTweetArray[i].getTokenMap().entrySet()) {
             	String token = entry.getKey();
             	Integer count = entry.getValue();
@@ -100,7 +110,9 @@ public class LocalTokenCounter {
         for (Map.Entry<String, Integer> entry : tokenMap.entrySet()) {
         	String token = entry.getKey();
         	Integer count = entry.getValue();
-        	counterArray[i++] = new TokenCounter(token, count);
+        	TokenCounter tokenCounter = new TokenCounter(token, count);
+        	log.finest("new TokenCounter: token="+tokenCounter.getToken()+", count="+tokenCounter.getCount());
+			counterArray[i++] = tokenCounter;
         }
 
     	clusteredGigaSpace.writeMultiple(counterArray,LEASE_TTL);

@@ -36,14 +36,15 @@ import com.gigaspaces.document.SpaceDocument;
 import com.j_spaces.core.client.SQLQuery;
 
 /**
- * This polling container processor parses raw tweets, generating TokenizedTweets
+ * This polling container processor parses raw tweets, generating TokenizedTweets.
+ * a raw tweet is represented by an instance of SpaceDocument of type "Tweet"
  * 
  * @author Dotan Horovits
  *
  */
 
 @EventDriven
-@Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2)
+@Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout = 60)
 @TransactionalEvent(timeout = 100)
 public class TweetParser {
 	
@@ -57,14 +58,10 @@ public class TweetParser {
 
     Logger log= Logger.getLogger(this.getClass().getName());
 
-//    @EventTemplate
-//    SpaceDocument unprocessedTweet() {
-//    	DocumentProperties properties = new DocumentProperties()
-//    	.setProperty("Processed", false);
-//    	SpaceDocument template = new SpaceDocument("Tweet", properties);
-//    	return template;
-//    }
-
+	/**
+	 * This method returns a SQL query defining an unprocessed Tweet. 
+	 * @return {@link SQLQuery} of a {@link SpaceDocument} of type "Tweet"
+	 */
     @EventTemplate
     SQLQuery<SpaceDocument> unprocessedTweet() {
     	SQLQuery<SpaceDocument> query = 
@@ -72,6 +69,15 @@ public class TweetParser {
     	return query;
     }
 
+    /**
+     * Event handler that receives a Tweet instance, processes its text and 
+     * generates a listing of the tokens appearing in the text and 
+     * their respective count of appearance in the text, 
+     * instantiates an instance of {@link TokenizedTweet} with this data,
+     * and writes it to the space.
+     * @param tweet
+     * @return {@link TokenizedTweet} containing a mapping of {token->count}
+     */
     @SpaceDataEvent
     public SpaceDocument eventListener(SpaceDocument tweet) {
     	log.info("parsing tweet "+tweet);
@@ -88,7 +94,7 @@ public class TweetParser {
     	return tweet;
     }
 
-    public static Map<String, Integer> tokenize(String text) {
+    protected Map<String, Integer> tokenize(String text) {
     	Map<String, Integer> tokenMap = new java.util.HashMap<String, Integer>();
     	StringTokenizer st = new StringTokenizer(text,"\"{}[]:;|<>?`'.,/~!@#$%^&*()_-+= \t\n\r\f\\");
 

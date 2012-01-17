@@ -34,6 +34,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Polling event container polling for {@link TokenCounter} instances and updating atomic counters accordingly.
+ * 
+ * @author dotan
+ *
+ */
 @EventDriven
 @Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout=1000)
 @TransactionalEvent
@@ -73,7 +79,7 @@ public class GlobalTokenCounter {
     private void incrementLocalToken(String token, Integer count) {
     	Integer globalCount = gigaMap.containsKey(token) ? (Integer)gigaMap.get(token)+count : count;
     	gigaMap.put(token, globalCount);
-    	log.info("+++ token="+token+" count="+(Integer)gigaMap.get(token));
+    	log.fine("+++ token="+token+" count="+(Integer)gigaMap.get(token));
     }
 
 }
