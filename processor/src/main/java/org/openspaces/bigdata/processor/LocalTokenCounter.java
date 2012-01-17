@@ -16,6 +16,7 @@
 
 package org.openspaces.bigdata.processor;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -33,6 +34,8 @@ import org.openspaces.events.polling.ReceiveHandler;
 import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
 import org.openspaces.events.polling.receive.ReceiveOperationHandler;
 
+import com.j_spaces.core.client.UpdateModifiers;
+
 /**
  * This polling container processor performs token count on bulks of tokenized tweets
  * 
@@ -47,10 +50,11 @@ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
  * @author Dotan Horovits
  */
 @EventDriven
-@Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 10000)
-@TransactionalEvent(timeout=1000)
+@Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 1000)
+@TransactionalEvent
 public class LocalTokenCounter {
 
+	private static final int WRITE_TIMEOUT = 1000;
 	private static final int LEASE_TTL = 5000;
 
 	@Resource(name = "clusteredGigaSpace")
@@ -93,7 +97,7 @@ public class LocalTokenCounter {
     public void eventListener(TokenizedTweet[] tokenizedTweetArray) {
 
     	log.info("local counting of a bulk of "+tokenizedTweetArray.length+" tweets");
-    	Map<String, Integer> tokenMap = new java.util.HashMap<String, Integer>();
+    	Map<String, Integer> tokenMap = new HashMap<String, Integer>();
     	for (int i = 0; i < tokenizedTweetArray.length; i++) {
     		log.fine("--processing "+tokenizedTweetArray[i]);
             for (Map.Entry<String, Integer> entry : tokenizedTweetArray[i].getTokenMap().entrySet()) {
@@ -105,17 +109,14 @@ public class LocalTokenCounter {
             }
     	}
 
-        TokenCounter[] counterArray = new TokenCounter[tokenMap.size()];
-    	int i = 0;
-        for (Map.Entry<String, Integer> entry : tokenMap.entrySet()) {
+        log.info("writing "+tokenMap.size()+" TokenCounters across the cluster");
+    	for (Map.Entry<String, Integer> entry : tokenMap.entrySet()) {
         	String token = entry.getKey();
         	Integer count = entry.getValue();
         	TokenCounter tokenCounter = new TokenCounter(token, count);
-        	log.finest("new TokenCounter: token="+tokenCounter.getToken()+", count="+tokenCounter.getCount());
-			counterArray[i++] = tokenCounter;
+        	log.fine("writing new TokenCounter: token="+tokenCounter.getToken()+", count="+tokenCounter.getCount());
+	    	clusteredGigaSpace.write(tokenCounter,LEASE_TTL,WRITE_TIMEOUT,UpdateModifiers.UPDATE_OR_WRITE);
         }
-
-    	clusteredGigaSpace.writeMultiple(counterArray,LEASE_TTL);
 
     }
 
