@@ -16,12 +16,8 @@
 
 package org.openspaces.bigdata.processor;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
+import com.gigaspaces.document.SpaceDocument;
+import com.j_spaces.core.client.SQLQuery;
 import org.openspaces.events.EventDriven;
 import org.openspaces.events.EventTemplate;
 import org.openspaces.events.TransactionalEvent;
@@ -31,8 +27,10 @@ import org.openspaces.events.polling.ReceiveHandler;
 import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
 import org.openspaces.events.polling.receive.ReceiveOperationHandler;
 
-import com.gigaspaces.document.SpaceDocument;
-import com.j_spaces.core.client.SQLQuery;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * This polling container processor removes processed tweets and persists it to an external data store
@@ -69,8 +67,7 @@ public class TweetPersister {
 
     @EventTemplate
     SQLQuery<SpaceDocument> processedTweet() {
-    	SQLQuery<SpaceDocument> query = 
-    		new SQLQuery<SpaceDocument>("Tweet", "Processed = "+true);
+    	SQLQuery<SpaceDocument> query =  new SQLQuery<SpaceDocument>("Tweet", "Processed = ?",true);
     	return query;
     }
 

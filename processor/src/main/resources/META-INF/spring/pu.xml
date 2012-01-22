@@ -5,24 +5,17 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:os-core="http://www.openspaces.org/schema/core"
        xmlns:os-events="http://www.openspaces.org/schema/events"
-       xmlns:os-remoting="http://www.openspaces.org/schema/remoting"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
        http://www.openspaces.org/schema/core http://www.openspaces.org/schema/8.0/core/openspaces-core.xsd
-       http://www.openspaces.org/schema/events http://www.openspaces.org/schema/8.0/events/openspaces-events.xsd
-       http://www.openspaces.org/schema/remoting http://www.openspaces.org/schema/8.0/remoting/openspaces-remoting.xsd">
+       http://www.openspaces.org/schema/events http://www.openspaces.org/schema/8.0/events/openspaces-events.xsd">
 
     <!--
         Spring property configurer which allows us to use system properties (such as user.name).
     -->
-    <bean id="propertiesConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="properties">
-            <props>
-                <prop key="BATCH_ZISE">100</prop>
-            </props>
-        </property>    
-    </bean>
+
+    <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:META-INF/spring/processor.properties"/>
 
 	<!-- Enable scan for OpenSpaces and Spring components -->
 	<context:component-scan base-package="org.openspaces.bigdata.processor" />
@@ -67,7 +60,10 @@
 
 	<os-core:giga-map id="gigaMap" map="map" tx-manager="transactionManager"/>
 
-	<bean id="fileExternalPersistence" class="org.openspaces.bigdata.processor.FileExternalPersistence">
-		<constructor-arg index="0" value="tweetRepo.txt"/>
-	</bean>
+	<!--<bean id="fileExternalPersistence" class="org.openspaces.bigdata.processor.FileExternalPersistence">-->
+		<!--<constructor-arg index="0" value="tweetRepo.txt"/>-->
+	<!--</bean>-->
+    
+    <bean id="cassandraExternalPersister" class="org.openspaces.bigdata.processor.CassandraExternalPersistence"/>
+
 </beans>
