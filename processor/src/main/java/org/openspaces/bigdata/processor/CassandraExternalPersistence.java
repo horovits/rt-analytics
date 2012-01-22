@@ -29,6 +29,8 @@ import me.prettyprint.hector.api.mutation.Mutator;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
+
+import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,6 +57,9 @@ public class CassandraExternalPersistence implements ExternalPersistence {
 
     @PostConstruct
     public void init() throws Exception {
+		final Formatter formatter = new Formatter();
+
+    	log.info(formatter.format("initializing connection to Cassandra DB: host=%s port=%d keyspace=%s column-family=%s\n",host,port,keyspaceName,columnFamily).toString());
         cluster = HFactory.getOrCreateCluster(keyspaceName, host + ":" + port);
         KeyspaceDefinition keyspaceDefinition = cluster.describeKeyspace(keyspaceName);
 //        if (keyspaceDefinition == null) {
@@ -65,24 +70,25 @@ public class CassandraExternalPersistence implements ExternalPersistence {
 
     public void write(Object data) {
 
-        HFactory.createMutator(keyspace, new StringSerializer());
+    	HFactory.createMutator(keyspace, new StringSerializer());
 
-        if (!(data instanceof SpaceDocument)) {
-            log.log(Level.WARNING, "Received non document event");
-            return;
-        }
-        SpaceDocument document = (SpaceDocument) data;
+    	if (!(data instanceof SpaceDocument)) {
+    		log.log(Level.WARNING, "Received non document event");
+    		return;
+    	}
+    	SpaceDocument document = (SpaceDocument) data;
 
 
-        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-        String uid = document.getProperty("Id");
-        for (String key : document.getProperties().keySet()) {
-            Object value = document.getProperty(key);
-            if (value != null) {
-                mutator.addInsertion(uid, columnFamily, HFactory.createColumn(key, value.toString(), stringSerializer,stringSerializer));
-            }
-        }
-        mutator.execute();
+    	Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+    	Long id = document.getProperty("Id");
+    	log.info("persisting data with id="+id);
+    	for (String key : document.getProperties().keySet()) {
+    		Object value = document.getProperty(key);
+    		if (value != null) {
+    			mutator.addInsertion(String.valueOf(id), columnFamily, HFactory.createColumn(key, value.toString(), stringSerializer,stringSerializer));
+    		}
+    	}
+    	mutator.execute();
     }
 
     public void writeBulk(Object[] dataArray) {
