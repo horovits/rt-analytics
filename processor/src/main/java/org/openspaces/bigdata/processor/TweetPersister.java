@@ -26,6 +26,7 @@ import org.openspaces.events.polling.Polling;
 import org.openspaces.events.polling.ReceiveHandler;
 import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
 import org.openspaces.events.polling.receive.ReceiveOperationHandler;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -46,8 +47,9 @@ public class TweetPersister {
 	
     Logger log= Logger.getLogger(this.getClass().getName());
 
-    private static final int BATCH_SIZE = 100; //TODO replace w/ Spring3 EL using @Value to inject property, instead of constant
-    
+    @Value("${batch.size}")
+    private int BATCH_SIZE = 100;
+
     @Resource
     private ExternalPersistence persister;
 	
@@ -72,7 +74,7 @@ public class TweetPersister {
     }
 
     @SpaceDataEvent
-    public SpaceDocument[] eventListener(SpaceDocument[] tweetArray) {
+    public void eventListener(SpaceDocument[] tweetArray) {
     	
     	log.info("writing behind a bulk of "+tweetArray.length+" tweets to backend persistence store");
 
@@ -82,7 +84,6 @@ public class TweetPersister {
 			log.severe("error persisting tweet bulk: "+e.getMessage());
 		}
 
-		return null;
     }
     
 }
