@@ -51,23 +51,20 @@ public class FileExternalPersistence implements ExternalPersistence {
 
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see org.openspaces.bigdata.processor.ExternalPersistence#write(java.lang.Object)
 	 */
-	@Override
 	public void write(Object data) throws IOException {
 		FileWriter fileWritter = new FileWriter(file,true);
         BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
         bufferWritter.write(data.toString());
-//        bufferWritter.newLine();
         bufferWritter.close();
         fileWritter.close();
 	}
 	
-	/* (non-Javadoc)
+	/**
 	 * @see org.openspaces.bigdata.processor.ExternalPersistence#writeBulk(java.lang.Object[])
 	 */
-	@Override
 	public void writeBulk(Object[] dataArray) throws IOException {
 		if (dataArray.length < 1) return;
 		StringBuffer data = new StringBuffer("");
