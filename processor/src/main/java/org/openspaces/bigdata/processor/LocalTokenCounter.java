@@ -37,17 +37,10 @@ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
 import com.j_spaces.core.client.UpdateModifiers;
 
 /**
- * This polling container processor performs token count on bulks of tokenized tweets
+ * This polling container processor performs token count on bulks of {@link TokenizedTweet}
  * 
  * @author Dotan Horovits
  *
- */
-
-/**
- * Event polling container processor filters out non-informative tokens, such as prepositions, 
- * from filtered {@link TokenizedTweet} instances.
- * 
- * @author Dotan Horovits
  */
 @EventDriven
 @Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 1000)
