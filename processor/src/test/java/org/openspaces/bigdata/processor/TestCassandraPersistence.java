@@ -45,7 +45,7 @@ public class TestCassandraPersistence {
 
     @Test
     public void testPersistence() {
-        String id = String.valueOf(System.currentTimeMillis());
+        Long id = System.currentTimeMillis();
         System.out.println("id = " + id);
         persister.write(new SpaceDocument("Tweet")
                 .setProperty("Id", id)
