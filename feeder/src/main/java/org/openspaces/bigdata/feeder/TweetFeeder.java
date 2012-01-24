@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 import org.openspaces.core.GigaSpace;
+import org.springframework.dao.DataAccessException;
 import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
@@ -81,16 +82,20 @@ public class TweetFeeder {
 					@Override
 					public void run() {
 
-						Twitter twitter = new TwitterTemplate(); 
+						try {
+							Twitter twitter = new TwitterTemplate(); 
 
-						List<Tweet> tweets = twitter.timelineOperations().getPublicTimeline();
+							List<Tweet> tweets = twitter.timelineOperations().getPublicTimeline();
 
-						for (Tweet tweet : tweets) {
-							log.fine(formatter.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
-									tweet.getId(), tweet.getFromUser(), tweet.getText()).toString());
+							for (Tweet tweet : tweets) {
+								log.fine(formatter.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
+										tweet.getId(), tweet.getFromUser(), tweet.getText()).toString());
 //							System.out.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
 //									tweet.getId(), tweet.getFromUser(), tweet.getText());
-							gigaSpace.write(constructTweetDocument(tweet));
+								gigaSpace.write(constructTweetDocument(tweet));
+							}
+						} catch (DataAccessException e) {
+							log.severe("error feeding tweets: "+e.getMessage());
 						}
 					}
 				}, 
