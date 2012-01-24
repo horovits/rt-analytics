@@ -25,8 +25,8 @@ import java.io.IOException;
 
 public interface ExternalPersistence {
 
-	public abstract void write(Object data) throws IOException;
+	public void write(Object data) throws IOException;
 
-	public abstract void writeBulk(Object[] dataArray) throws IOException;
+	public void writeBulk(Object[] dataArray) throws IOException;
 
 }
