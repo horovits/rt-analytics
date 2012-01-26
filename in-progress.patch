@@ -1,0 +1,2277 @@
+diff --git a/common/pom.xml b/common/pom.xml
+index fc39e61..a290b43 100644
+--- a/common/pom.xml
++++ b/common/pom.xml
+@@ -1,25 +1,23 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+-    <modelVersion>4.0.0</modelVersion>
+-    <groupId>org.openspaces.bigdata</groupId>
+-    <artifactId>common</artifactId>
+-    <packaging>jar</packaging>
+-    <version>1.0-SNAPSHOT</version>
+-    <name>common</name>
+-    <parent>
+-        <groupId>org.openspaces.bigdata</groupId>
+-        <artifactId>rt-analytics</artifactId>
+-        <version>1.0-SNAPSHOT</version>
+-    </parent>
+-    <build>
+-        <finalName>rt-analytics-common</finalName>
+-        <resources>
+-            <resource>
+-                <directory>src/main/java</directory>
+-                <includes>
+-                    <include>**/*.xml</include>
+-                </includes>
+-            </resource>
+-        </resources>
+-    </build>
++	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
++	<modelVersion>4.0.0</modelVersion>
++	<parent>
++		<groupId>org.openspaces.bigdata</groupId>
++		<artifactId>rt-analytics</artifactId>
++		<version>1.0-SNAPSHOT</version>
++	</parent>
++	<artifactId>rt-common</artifactId>
++	<packaging>jar</packaging>
++	<name>${project.artifactId}</name>
++	<build>
++		<finalName>${project.name}</finalName>
++		<resources>
++			<resource>
++				<directory>src/main/java</directory>
++				<includes>
++					<include>**/*.xml</include>
++				</includes>
++			</resource>
++		</resources>
++	</build>
+ </project>
+diff --git a/common/src/main/java/org/openspaces/bigdata/common/Data.java b/common/src/main/java/org/openspaces/bigdata/common/Data.java
+index 2a43fa5..7630218 100644
+--- a/common/src/main/java/org/openspaces/bigdata/common/Data.java
++++ b/common/src/main/java/org/openspaces/bigdata/common/Data.java
+@@ -14,9 +14,6 @@ import com.gigaspaces.annotation.pojo.SpaceRouting;
+ @SpaceClass
+ public class Data {
+ 
+-	//test comment
+-	//test//////
+-	
+     private String id;
+ 
+     private Long type;
+@@ -27,13 +24,10 @@ public class Data {
+ 
+     private Boolean processed;
+ 
+-    //test
+-
+     /**
+      * Constructs a new Data object.
+      */
+     public Data() {
+-
+     }
+ 
+     /**
+diff --git a/feeder/pom.xml b/feeder/pom.xml
+index 5ab582d..4a15a3d 100644
+--- a/feeder/pom.xml
++++ b/feeder/pom.xml
+@@ -1,30 +1,22 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+-    <groupId>org.openspaces.bigdata</groupId>
+-    <artifactId>feeder</artifactId>
+-    <packaging>jar</packaging>
+-    <version>1.0-SNAPSHOT</version>
+-    <name>feeder</name>
+     <parent>
+         <groupId>org.openspaces.bigdata</groupId>
+         <artifactId>rt-analytics</artifactId>
+         <version>1.0-SNAPSHOT</version>
+     </parent>
++    <artifactId>fr-feeder</artifactId>
++    <packaging>jar</packaging>
++    <name>${project.artifactId}</name>
+     <properties>
+         <gsType>PU</gsType>
+-		<java-version>1.6</java-version>
+-<!-- 		<org.springframework.social-version>1.0.1.BUILD-SNAPSHOT</org.springframework.social-version> -->
+ 		<org.springframework.social.twitter-version>1.0.1.RELEASE</org.springframework.social.twitter-version>
+-<!-- 		<org.springframework-version>3.0.6.RELEASE</org.springframework-version> -->
+-<!-- 		<org.springframework.security.crypto-version>3.1.0.RELEASE</org.springframework.security.crypto-version> -->
+     </properties>
+     <dependencies>
+         <dependency>
+             <groupId>org.openspaces.bigdata</groupId>
+-            <artifactId>common</artifactId>
+-            <version>1.0-SNAPSHOT</version>
+-            <scope>compile</scope>
++            <artifactId>rt-common</artifactId>
+         </dependency>
+         <dependency>
+ 		    <groupId>org.springframework.social</groupId>
+@@ -33,7 +25,7 @@
+ 	    </dependency>
+     </dependencies>
+     <build>
+-        <finalName>rt-analytics-feeder</finalName>
++		<finalName>${project.name}</finalName>
+         <plugins>
+             <plugin>
+                 <artifactId>maven-assembly-plugin</artifactId>
+diff --git a/feeder/src/main/java/org/openspaces/bigdata/feeder/Feeder.java b/feeder/src/main/java/org/openspaces/bigdata/feeder/Feeder.java
+index f6aa57f..713fa8f 100644
+--- a/feeder/src/main/java/org/openspaces/bigdata/feeder/Feeder.java
++++ b/feeder/src/main/java/org/openspaces/bigdata/feeder/Feeder.java
+@@ -1,31 +1,23 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ package org.openspaces.bigdata.feeder;
+ 
+-import org.openspaces.core.GigaSpace;
+-import org.openspaces.core.SpaceInterruptedException;
+-
+-import org.springframework.beans.factory.DisposableBean;
+-import org.springframework.beans.factory.InitializingBean;
+-
+-import com.gigaspaces.document.DocumentProperties;
+-import com.gigaspaces.document.SpaceDocument;
+-
+ import java.util.Date;
++import java.util.List;
+ import java.util.Random;
+ import java.util.concurrent.Executors;
+ import java.util.concurrent.ScheduledExecutorService;
+@@ -33,57 +25,51 @@ import java.util.concurrent.ScheduledFuture;
+ import java.util.concurrent.TimeUnit;
+ import java.util.logging.Logger;
+ 
+-import javax.annotation.Resource;
++import javax.annotation.PostConstruct;
++
++import org.openspaces.core.GigaSpace;
++import org.openspaces.core.SpaceInterruptedException;
++import org.springframework.beans.factory.DisposableBean;
++import org.springframework.beans.factory.InitializingBean;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.beans.factory.annotation.Value;
++
++import com.gigaspaces.document.DocumentProperties;
++import com.gigaspaces.document.SpaceDocument;
+ 
+ /**
+  * A feeder bean that generates and feeds simulated tweets to a remote space periodically using scheduled task.
+- * The feeder uses tweetTextList, a predefined Spring-injected list of tweet texts, 
+- * and numberOfUsers for generating user ids. 
++ * <p>
++ * The feeder uses tweetTextList, a predefined Spring-injected list of tweet texts, and numberOfUsers for generating user ids.
+  * 
+  * @author Dotan Horovits
+  */
+-public class Feeder implements InitializingBean, DisposableBean {
+-	//test
+-
++public class Feeder implements DisposableBean {
++    private Logger log = Logger.getLogger(Feeder.class.getSimpleName());
+     private static final int NUM_THREADS = 5;
+ 
+-	private Logger log= Logger.getLogger(this.getClass().getName());
+-    
+-    private ScheduledExecutorService executorService;
++    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(NUM_THREADS);
+ 
+     private ScheduledFuture<?> sf;
+ 
++    @Value("${tweet.delayInMs:1000}")
+     private long numberOfUsers = 10;
+ 
+     private long defaultDelay = 1000;
+ 
+-    private FeederTask feederTask;
+-    
+-    @Resource
+-    private java.util.List<String> tweetTextList;
+-    
+-    @Resource
+-    private GigaSpace gigaSpace;
++    private FeederTask feederTask = new FeederTask();
+ 
+-    /**
+-     * Sets the number of users that will be used to simulate interacting users.
+-     */
+-    public void setNumberOfUsers(long numberOfTypes) {
+-        this.numberOfUsers = numberOfTypes;
+-    }
++    @Autowired(required = true)
++    private List<String> tweetTextList;
+ 
+-    public void setDefaultDelay(long defaultDelay) {
+-        this.defaultDelay = defaultDelay;
+-    }
++    @Autowired
++    private GigaSpace gigaSpace;
+ 
+-    public void afterPropertiesSet() throws Exception {
+-    	assert tweetTextList != null;
+-    	log.info("tweet list size: " +tweetTextList.size());
++    @PostConstruct
++    void onPostConstruct() throws Exception {
++        log.info("tweet list size: " + tweetTextList.size());
+         log.info("--- STARTING FEEDER WITH CYCLE [" + defaultDelay + "]");
+-        executorService = Executors.newScheduledThreadPool(NUM_THREADS);
+-        feederTask = new FeederTask();
+-        sf = executorService.scheduleAtFixedRate(feederTask, defaultDelay, defaultDelay,
+-                TimeUnit.MILLISECONDS);
++        sf = executorService.scheduleAtFixedRate(feederTask, defaultDelay, defaultDelay, TimeUnit.MILLISECONDS);
+     }
+ 
+     public void destroy() throws Exception {
+@@ -91,25 +77,23 @@ public class Feeder implements InitializingBean, DisposableBean {
+         sf = null;
+         executorService.shutdown();
+     }
+-    
++
+     public long getFeedCount() {
+         return feederTask.getCounter();
+     }
+ 
+-    
+     public class FeederTask implements Runnable {
+-
+         private long counter = 1;
+-
+         private Random randomGenerator = new Random();
+ 
+         public void run() {
+             try {
+-                long toUserId = randomGenerator.nextInt((int)numberOfUsers), fromUserId  = randomGenerator.nextInt((int)numberOfUsers);
+-                SpaceDocument tweet = constructTweet(counter++, tweetTextList.get(randomGenerator.nextInt(tweetTextList.size())), new Date(), toUserId, fromUserId, false);
++                long toUserId = randomGenerator.nextInt((int) numberOfUsers), fromUserId = randomGenerator.nextInt((int) numberOfUsers);
++                SpaceDocument tweet = constructTweet(counter++, tweetTextList.get(randomGenerator.nextInt(tweetTextList.size())), new Date(), toUserId,
++                        fromUserId, false);
+                 gigaSpace.write(tweet);
+                 log.fine("--- FEEDER WROTE " + tweet);
+-            } catch (SpaceInterruptedException e) {
++            } catch (SpaceInterruptedException ignore) {
+                 // ignore, we are being shutdown
+             } catch (Exception e) {
+                 e.printStackTrace();
+@@ -120,18 +104,15 @@ public class Feeder implements InitializingBean, DisposableBean {
+             return counter;
+         }
+     }
+-    
++
+     public SpaceDocument constructTweet(long id, String text, Date createdAt, long toUserId, long fromUserId, boolean processed) {
+-        DocumentProperties properties = new DocumentProperties()
+-            .setProperty("Id", id)
+-            .setProperty("Text", text)
+-            .setProperty("CreatedAt", createdAt)
+-            .setProperty("FromUserId", fromUserId)
+-            .setProperty("ToUserId", toUserId)
+-            .setProperty("Processed", processed);
+-        SpaceDocument tweet = new SpaceDocument("Tweet", properties);
+-        return tweet;
++        return new SpaceDocument("Tweet", new DocumentProperties() //
++                .setProperty("Id", id) //
++                .setProperty("Text", text) //
++                .setProperty("CreatedAt", createdAt) //
++                .setProperty("FromUserId", fromUserId) //
++                .setProperty("ToUserId", toUserId) //
++                .setProperty("Processed", processed));
+     }
+ 
+-    
+ }
+diff --git a/feeder/src/main/java/org/openspaces/bigdata/feeder/TweetFeeder.java b/feeder/src/main/java/org/openspaces/bigdata/feeder/TweetFeeder.java
+index 56583c4..54ea505 100644
+--- a/feeder/src/main/java/org/openspaces/bigdata/feeder/TweetFeeder.java
++++ b/feeder/src/main/java/org/openspaces/bigdata/feeder/TweetFeeder.java
+@@ -18,99 +18,74 @@ package org.openspaces.bigdata.feeder;
+ 
+ import java.util.Formatter;
+ import java.util.List;
++import java.util.Timer;
++import java.util.TimerTask;
+ import java.util.logging.Logger;
+ 
+ import javax.annotation.PostConstruct;
+-import javax.annotation.Resource;
+ 
+ import org.openspaces.core.GigaSpace;
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.beans.factory.annotation.Value;
+ import org.springframework.dao.DataAccessException;
+ import org.springframework.social.twitter.api.Tweet;
+ import org.springframework.social.twitter.api.Twitter;
+ import org.springframework.social.twitter.api.impl.TwitterTemplate;
++import org.springframework.stereotype.Component;
+ 
+ import com.gigaspaces.document.DocumentProperties;
+ import com.gigaspaces.document.SpaceDocument;
+ 
+ /**
+- * A feeder bean that connects to Twitter, retrieves the public timeline tweets, 
+- * converts them to standard Tweet SpaceDocument format, and writes them to the remote space. 
+- *
++ * A feeder bean that connects to Twitter, retrieves the public timeline tweets, converts them to standard Tweet SpaceDocument format, and writes them to the
++ * remote space.
++ * 
+  * @author Dotan Horovits
+  */
++@Component
+ public class TweetFeeder {
+-
+-	private Logger log= Logger.getLogger(this.getClass().getName());
+-
+-    @Resource
++    private Logger log = Logger.getLogger(this.getClass().getName());
++    @Autowired
+     private GigaSpace gigaSpace;
+-    
+-    private int delay = 1000; //milliseconds
+-	private int period = 1000; //milliseconds
+-
+-
+-	public int getDelay() {
+-		return delay;
+-	}
+-
+-	public void setDelay(int delay) {
+-		this.delay = delay;
+-	}
+-
+-	public int getPeriod() {
+-		return period;
+-	}
++    @Value("${tweet.delayInMs:1000}")
++    private int delayInMs = 1000; 
++    @Value("${tweet.periodInMs:1000}")
++    private int periodInMs = 1000; 
+ 
+-	public void setPeriod(int period) {
+-		this.period = period;
+-	}
+-
+-	/**
+-	 * @param args
+-	 */
+-	public static void main(String[] args) {
+-
+-		new TweetFeeder().execute();
+-
+-	}
+-	
+-	@PostConstruct
+-	public void execute() {
+-		new java.util.Timer().scheduleAtFixedRate(
+-				new java.util.TimerTask() {
+-					Formatter formatter = new Formatter();
+-					@Override
+-					public void run() {
+-
+-						try {
+-							Twitter twitter = new TwitterTemplate(); 
+-
+-							List<Tweet> tweets = twitter.timelineOperations().getPublicTimeline();
++    public static void main(String[] args) {
++        new TweetFeeder().execute();
++    }
+ 
+-							for (Tweet tweet : tweets) {
+-								log.fine(formatter.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
+-										tweet.getId(), tweet.getFromUser(), tweet.getText()).toString());
+-//							System.out.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
+-//									tweet.getId(), tweet.getFromUser(), tweet.getText());
+-								gigaSpace.write(constructTweetDocument(tweet));
+-							}
+-						} catch (DataAccessException e) {
+-							log.severe("error feeding tweets: "+e.getMessage());
+-						}
+-					}
+-				}, 
+-				delay, 
+-				period);		
+-	}
++    @PostConstruct
++    public void execute() {
++        new Timer().scheduleAtFixedRate(new TimerTask() {
++            Formatter formatter = new Formatter();
++
++            @Override
++            public void run() {
++
++                try {
++                    Twitter twitter = new TwitterTemplate();
++
++                    List<Tweet> tweets = twitter.timelineOperations().getPublicTimeline();
++
++                    for (Tweet tweet : tweets) {
++                        log.fine(formatter.format("Tweet id=%d\tfromUser=%s\ttext=%s \n", tweet.getId(), tweet.getFromUser(), tweet.getText()).toString());
++                        // System.out.format("Tweet id=%d\tfromUser=%s\ttext=%s \n",
++                        // tweet.getId(), tweet.getFromUser(), tweet.getText());
++                        gigaSpace.write(constructTweetDocument(tweet));
++                    }
++                } catch (DataAccessException e) {
++                    log.severe("error feeding tweets: " + e.getMessage());
++                }
++            }
++        }, delayInMs, periodInMs);
++    }
+ 
+     public SpaceDocument constructTweetDocument(Tweet tweet) {
+-        DocumentProperties properties = new DocumentProperties()
+-            .setProperty("Id", tweet.getId())
+-            .setProperty("Text", tweet.getText())
+-            .setProperty("CreatedAt", tweet.getCreatedAt())
+-            .setProperty("FromUserId", tweet.getFromUserId())
+-            .setProperty("ToUserId", tweet.getToUserId())
+-            .setProperty("Processed", Boolean.FALSE);
++        DocumentProperties properties = new DocumentProperties().setProperty("Id", tweet.getId()).setProperty("Text", tweet.getText())
++                .setProperty("CreatedAt", tweet.getCreatedAt()).setProperty("FromUserId", tweet.getFromUserId()).setProperty("ToUserId", tweet.getToUserId())
++                .setProperty("Processed", Boolean.FALSE);
+         SpaceDocument tweetDoc = new SpaceDocument("Tweet", properties);
+         return tweetDoc;
+     }
+diff --git a/feeder/src/main/resources/META-INF/spring/pu.xml b/feeder/src/main/resources/META-INF/spring/pu.xml
+index 092fd57..8e5a613 100644
+--- a/feeder/src/main/resources/META-INF/spring/pu.xml
++++ b/feeder/src/main/resources/META-INF/spring/pu.xml
+@@ -13,27 +13,10 @@
+        http://www.openspaces.org/schema/remoting http://www.openspaces.org/schema/8.0/remoting/openspaces-remoting.xsd
+        http://www.openspaces.org/schema/sla http://www.openspaces.org/schema/8.0/sla/openspaces-sla.xsd">
+ 
+-
+-    <!--
+-        Spring propery configurer which allows us to use system properties (such as user.name).
+-    -->
+-    <bean id="propertiesConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+-        <property name="properties">
+-            <props>
+-                <prop key="numberOfUsers">100</prop>
+-            </props>
+-        </property>
+-    </bean>
+-
+-    <!-- Enable scan for OpenSpaces and Spring components -->
+-    <context:component-scan base-package="org.openspaces.bigdata.common" />
+-	<!--  Enables Spring Annotation configuration  -->
+-<!--     <context:annotation-config /> -->
+-    
+-
++	<context:property-placeholder location="classpath:feeder.properties" />
++    <context:component-scan base-package="org.openspaces.bigdata" />
+     <!--
+         A bean representing a space (an IJSpace implementation).
+-
+         Note, we perform a lookup on the space since we are working against a remote space.
+     -->
+     <os-core:space id="space" url="jini://*/*/space" />
+@@ -46,15 +29,12 @@
+     <!--
+         The Data feeder bean, writing new Data objects to the space in a constant interval.
+     -->
+-<!-- 
++    
++	<!-- 
+     <bean id="simulatedTweetFeeder" class="org.openspaces.bigdata.feeder.Feeder" depends-on="gigaSpace">
+         <property name="numberOfUsers" value="${numberOfUsers}" />
+     </bean>
+- -->
+- 	<bean id="tweetFeeder" class="org.openspaces.bigdata.feeder.TweetFeeder">
+- 		<property name="delay" value="1000"/>
+- 		<property name="period" value="1000"/>
+- 	</bean>
++	 -->
+ 	
+ 	<bean id="tweetTextList" class="java.util.LinkedList">
+ 		<constructor-arg>
+diff --git a/pom.xml b/pom.xml
+index 991972a..4a22118 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -8,7 +8,7 @@
+ 	<packaging>pom</packaging>
+ 	<properties>
+ 		<gsVersion>8.0.5</gsVersion>
+-		<springVersion>3.0.5.RELEASE</springVersion>
++		<spring.version>3.0.5.RELEASE</spring.version>
+ 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+ 	</properties>
+ 	<modules>
+@@ -32,10 +32,19 @@
+ 		<dependency>
+ 			<groupId>org.springframework</groupId>
+ 			<artifactId>spring-test</artifactId>
+-			<version>${springVersion}</version>
++			<version>${spring.version}</version>
+ 			<scope>test</scope>
+ 		</dependency>
+ 	</dependencies>
++	<dependencyManagement>
++		<dependencies>
++			<dependency>
++				<groupId>org.openspaces.bigdata</groupId>
++				<artifactId>rt-common</artifactId>
++				<version>${project.version}</version>
++			</dependency>
++		</dependencies>
++	</dependencyManagement>
+ 	<build>
+ 		<defaultGoal>package</defaultGoal>
+ 		<testResources>
+@@ -48,21 +57,18 @@
+ 		</testResources>
+ 		<plugins>
+ 			<plugin>
+-				<groupId>org.apache.maven.plugins</groupId>
+ 				<artifactId>maven-compiler-plugin</artifactId>
++				<version>2.3.2</version>
+ 				<configuration>
+-					<source>1.5</source>
+-					<target>1.5</target>
++					<source>1.6</source>
++					<target>1.6</target>
+ 				</configuration>
+-				<version>2.3.2</version>
+ 			</plugin>
+ 			<plugin>
+-				<groupId>org.apache.maven.plugins</groupId>
+ 				<artifactId>maven-assembly-plugin</artifactId>
+ 				<version>2.2-beta-2</version>
+ 			</plugin>
+ 			<plugin>
+-				<groupId>org.apache.maven.plugins</groupId>
+ 				<artifactId>maven-openspaces-plugin</artifactId>
+ 				<version>${gsVersion}</version>
+ 			</plugin>
+diff --git a/processor/pom.xml b/processor/pom.xml
+index e74ba6f..53447f4 100644
+--- a/processor/pom.xml
++++ b/processor/pom.xml
+@@ -1,63 +1,56 @@
+ <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+-    <modelVersion>4.0.0</modelVersion>
+-    <groupId>org.openspaces.bigdata</groupId>
+-    <artifactId>processor</artifactId>
+-    <packaging>jar</packaging>
+-    <version>1.0-SNAPSHOT</version>
+-    <name>processor</name>
+-    <parent>
+-        <groupId>org.openspaces.bigdata</groupId>
+-        <artifactId>rt-analytics</artifactId>
+-        <version>1.0-SNAPSHOT</version>
+-    </parent>
+-    <properties>
+-        <gsType>PU</gsType>
+-    </properties>
+-    <dependencies>
+-        <dependency>
+-            <groupId>org.openspaces.bigdata</groupId>
+-            <artifactId>common</artifactId>
+-            <version>1.0-SNAPSHOT</version>
+-            <scope>compile</scope>
+-        </dependency>
+-
+-        <dependency>
+-            <groupId>org.apache.cassandra</groupId>
+-            <artifactId>cassandra-all</artifactId>
+-            <version>1.0.6</version>
+-        </dependency>
+-
+-        <dependency>
+-            <groupId>me.prettyprint</groupId>
+-            <artifactId>hector-core</artifactId>
+-            <version>1.0-2</version>
+-        </dependency>
+-
+-    </dependencies>
+-    <build>
+-        <finalName>rt-analytics-processor</finalName>
+-        <plugins>
+-            <plugin>
+-                <artifactId>maven-assembly-plugin</artifactId>
+-                <configuration>
+-                    <appendAssemblyId>false</appendAssemblyId>
+-                    <attach>false</attach>
+-                    <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+-                    <descriptors>
+-                        <descriptor>src/main/assembly/assembly.xml</descriptor>
+-                    </descriptors>
+-                </configuration>
+-                <executions>
+-                    <execution>
+-                        <id>assembly</id>
+-                        <phase>package</phase>
+-                        <goals>
+-                            <goal>single</goal>
+-                        </goals>
+-                    </execution>
+-                </executions>
+-            </plugin>
+-        </plugins>
+-    </build>
++	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
++	<modelVersion>4.0.0</modelVersion>
++	<parent>
++		<groupId>org.openspaces.bigdata</groupId>
++		<artifactId>rt-analytics</artifactId>
++		<version>1.0-SNAPSHOT</version>
++	</parent>
++	<artifactId>rt-processor</artifactId>
++	<packaging>jar</packaging>
++	<name>${project.artifactId}</name>
++	<properties>
++		<gsType>PU</gsType>
++	</properties>
++	<dependencies>
++		<dependency>
++			<groupId>org.openspaces.bigdata</groupId>
++			<artifactId>rt-common</artifactId>
++		</dependency>
++		<dependency>
++			<groupId>org.apache.cassandra</groupId>
++			<artifactId>cassandra-all</artifactId>
++			<version>1.0.6</version>
++		</dependency>
++		<dependency>
++			<groupId>me.prettyprint</groupId>
++			<artifactId>hector-core</artifactId>
++			<version>1.0-2</version>
++		</dependency>
++	</dependencies>
++	<build>
++		<finalName>${project.name}</finalName>
++		<plugins>
++			<plugin>
++				<artifactId>maven-assembly-plugin</artifactId>
++				<configuration>
++					<appendAssemblyId>false</appendAssemblyId>
++					<attach>false</attach>
++					<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
++					<descriptors>
++						<descriptor>src/main/assembly/assembly.xml</descriptor>
++					</descriptors>
++				</configuration>
++				<executions>
++					<execution>
++						<id>assembly</id>
++						<phase>package</phase>
++						<goals>
++							<goal>single</goal>
++						</goals>
++					</execution>
++				</executions>
++			</plugin>
++		</plugins>
++	</build>
+ </project>
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/CassandraExternalPersistence.java b/processor/src/main/java/org/openspaces/bigdata/processor/CassandraExternalPersistence.java
+index 61db73c..efbd884 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/CassandraExternalPersistence.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/CassandraExternalPersistence.java
+@@ -1,96 +1,86 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
+-
+-/**
+- * @author Uri Cohen
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
+  */
+ package org.openspaces.bigdata.processor;
+ 
+-import com.gigaspaces.document.SpaceDocument;
++import static java.lang.String.format;
++import static me.prettyprint.hector.api.factory.HFactory.createColumn;
++import static me.prettyprint.hector.api.factory.HFactory.createKeyspace;
++import static me.prettyprint.hector.api.factory.HFactory.createMutator;
++import static me.prettyprint.hector.api.factory.HFactory.getOrCreateCluster;
++
++import java.util.logging.Level;
++import java.util.logging.Logger;
++
++import javax.annotation.PostConstruct;
++
+ import me.prettyprint.cassandra.serializers.StringSerializer;
+ import me.prettyprint.hector.api.Cluster;
+ import me.prettyprint.hector.api.Keyspace;
+-import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
+-import me.prettyprint.hector.api.factory.HFactory;
+ import me.prettyprint.hector.api.mutation.Mutator;
+-import org.springframework.beans.factory.annotation.Value;
+ 
+-import javax.annotation.PostConstruct;
++import org.springframework.beans.factory.annotation.Value;
+ 
+-import java.util.Formatter;
+-import java.util.logging.Level;
+-import java.util.logging.Logger;
++import com.gigaspaces.document.SpaceDocument;
+ 
+ public class CassandraExternalPersistence implements ExternalPersistence {
+-    private final static StringSerializer stringSerializer = StringSerializer.get();
+-
+-    private final Logger log = Logger.getLogger(getClass().getName());
+-    private Cluster cluster;
++    private static final Logger log = Logger.getLogger(CassandraExternalPersistence.class.getName());
++    private static final StringSerializer stringSerializer = StringSerializer.get();
+ 
+     @Value("${cassandra.keyspace}")
+     private String keyspaceName;
+-
+     @Value("${cassandra.cf}")
+     private String columnFamily;
+-
+     @Value("${cassandra.host}")
+     private String host = "localhost";
+-
+     @Value("${cassandra.port}")
+     private int port = 9160;
+ 
++    private Cluster cluster;
+     private Keyspace keyspace;
+ 
+-
+     @PostConstruct
+     public void init() throws Exception {
+-		final Formatter formatter = new Formatter();
+-
+-    	log.info(formatter.format("initializing connection to Cassandra DB: host=%s port=%d keyspace=%s column-family=%s\n",host,port,keyspaceName,columnFamily).toString());
+-        cluster = HFactory.getOrCreateCluster(keyspaceName, host + ":" + port);
+-        KeyspaceDefinition keyspaceDefinition = cluster.describeKeyspace(keyspaceName);
+-//        if (keyspaceDefinition == null) {
+-//            createSchema(cluster);
+-//        }
+-        keyspace = HFactory.createKeyspace(keyspaceName, cluster);
++        log.info(format("initializing connection to Cassandra DB: host=%s port=%d keyspace=%s column-family=%s\n", host, port, keyspaceName,
++                columnFamily));
++        cluster = getOrCreateCluster(keyspaceName, host + ":" + port);
++        keyspace = createKeyspace(keyspaceName, cluster);
+     }
+ 
++    @Override
+     public void write(Object data) {
+-
+-    	HFactory.createMutator(keyspace, new StringSerializer());
+-
+-    	if (!(data instanceof SpaceDocument)) {
+-    		log.log(Level.WARNING, "Received non document event");
+-    		return;
+-    	}
+-    	SpaceDocument document = (SpaceDocument) data;
+-
+-
+-    	Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+-    	Long id = document.getProperty("Id");
+-    	log.info("persisting data with id="+id);
+-    	for (String key : document.getProperties().keySet()) {
+-    		Object value = document.getProperty(key);
+-    		if (value != null) {
+-    			mutator.addInsertion(String.valueOf(id), columnFamily, HFactory.createColumn(key, value.toString(), stringSerializer,stringSerializer));
+-    		}
+-    	}
+-    	mutator.execute();
++        if (!(data instanceof SpaceDocument)) {
++            log.log(Level.WARNING, "Received non document event");
++            return;
++        }
++        SpaceDocument document = (SpaceDocument) data;
++        Long id = document.getProperty("Id");
++        log.info("persisting data with id=" + id);
++        Mutator<String> mutator = createMutator(keyspace, stringSerializer);
++        for (String key : document.getProperties().keySet()) {
++            Object value = document.getProperty(key);
++            if (value != null) {
++                mutator.addInsertion(String.valueOf(id), //
++                        columnFamily, //
++                        createColumn(key, value.toString(), stringSerializer, stringSerializer));
++            }
++        }
++        mutator.execute();
+     }
+ 
++    @Override
+     public void writeBulk(Object[] dataArray) {
+         for (Object o : dataArray) {
+             write(o);
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/ExternalPersistence.java b/processor/src/main/java/org/openspaces/bigdata/processor/ExternalPersistence.java
+index 7ffd4ef..89ab2cb 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/ExternalPersistence.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/ExternalPersistence.java
+@@ -1,18 +1,18 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ /**
+  * Interface for accessing an external persistence layer for persisting data.
+@@ -25,8 +25,8 @@ import java.io.IOException;
+ 
+ public interface ExternalPersistence {
+ 
+-	public void write(Object data) throws IOException;
++    void write(Object data) throws IOException;
+ 
+-	public void writeBulk(Object[] dataArray) throws IOException;
++    void writeBulk(Object[] dataArray) throws IOException;
+ 
+ }
+\ No newline at end of file
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/FileExternalPersistence.java b/processor/src/main/java/org/openspaces/bigdata/processor/FileExternalPersistence.java
+index a6eda4a..cbb1e19 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/FileExternalPersistence.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/FileExternalPersistence.java
+@@ -1,18 +1,18 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ package org.openspaces.bigdata.processor;
+ 
+@@ -23,55 +23,66 @@ import java.io.IOException;
+ import java.util.logging.Logger;
+ 
+ /**
+- * This is an {@link org.openspaces.bigdata.processor.ExternalPersistence} implementation to a local file system.
++ * This is an {@link ExternalPersistence} implementation to a local file system.
+  * 
+  * @author Dotan Horovits
+- *
++ * 
+  */
+ public class FileExternalPersistence implements ExternalPersistence {
+ 
+-	Logger log= Logger.getLogger(this.getClass().getName());
++    private static final Logger log = Logger.getLogger(FileExternalPersistence.class.getName());
++
++    private File file;
++
++    public FileExternalPersistence(String fileName) throws IOException {
++        this(new File(fileName));
++    }
++
++    public FileExternalPersistence(File file) throws IOException {
++        this.file = file;
++        log.info("using file persistence: " + file.getAbsolutePath());
++        if (file.exists()) {
++            file.delete();
++        }
+ 
+-	private File file;
+-	
+-	public FileExternalPersistence(String fileName) throws IOException {
+-		this(new java.io.File(fileName));
+-	}
+-	
+-	public FileExternalPersistence(File file) throws IOException {
+-		this.file = file;
+-		log.info("using file persistence: "+file.getAbsolutePath());
+-		
+-		if(file.exists()){
+-			file.delete();
+-		}
+-		
+-		log.info("creating file for file persistence: "+file.getAbsolutePath());
+-		file.createNewFile();
++        log.info("creating file for file persistence: " + file.getAbsolutePath());
++        file.createNewFile();
++    }
+ 
+-	}
++    @Override
++    public void write(Object data) throws IOException {
++        FileWriter fileWritter = null;
++        BufferedWriter bufferedWriter = null;
++        try {
++            fileWritter = new FileWriter(file, true);
++            bufferedWriter = new BufferedWriter(fileWritter);
++            bufferedWriter.write(data.toString());
++        } finally {
++            if (bufferedWriter != null) {
++                try {
++                    bufferedWriter.close();
++                } catch (Exception ignore) {
++                    //
++                }
++            }
++            if (bufferedWriter != null) {
++                try {
++                    bufferedWriter.close();
++                } catch (Exception ignore) {
++                    //
++                }
++            }
++        }
++    }
+ 
+-	/** 
+-	 * @see org.openspaces.bigdata.processor.ExternalPersistence#write(java.lang.Object)
+-	 */
+-	public void write(Object data) throws IOException {
+-		FileWriter fileWritter = new FileWriter(file,true);
+-        BufferedWriter bufferWritter = new BufferedWriter(fileWritter);
+-        bufferWritter.write(data.toString());
+-        bufferWritter.close();
+-        fileWritter.close();
+-	}
+-	
+-	/**
+-	 * @see org.openspaces.bigdata.processor.ExternalPersistence#writeBulk(java.lang.Object[])
+-	 */
+-	public void writeBulk(Object[] dataArray) throws IOException {
+-		if (dataArray.length < 1) return;
+-		StringBuffer data = new StringBuffer("");
+-		for (Object obj : dataArray) {
+-			data.append(obj.toString()).append("\n");
+-		}
+-		write(data.toString());
+-	}
+-	
++    @Override
++    public void writeBulk(Object[] dataArray) throws IOException {
++        if (dataArray.length < 1)
++            return;
++        StringBuffer data = new StringBuffer("");
++        for (Object obj : dataArray) {
++            data.append(obj.toString()).append("\n");
++        }
++        write(data.toString());
++    }
+ }
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/GlobalTokenCounter.java b/processor/src/main/java/org/openspaces/bigdata/processor/GlobalTokenCounter.java
+index c3c90eb..04c0417 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/GlobalTokenCounter.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/GlobalTokenCounter.java
+@@ -1,21 +1,24 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ package org.openspaces.bigdata.processor;
+ 
++import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
++import static org.springframework.transaction.annotation.Propagation.REQUIRED;
++
+ import java.util.logging.Logger;
+ 
+ import javax.annotation.Resource;
+@@ -30,56 +33,51 @@ import org.openspaces.events.polling.Polling;
+ import org.openspaces.events.polling.ReceiveHandler;
+ import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
+ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
+-import org.springframework.transaction.annotation.Isolation;
+-import org.springframework.transaction.annotation.Propagation;
+ import org.springframework.transaction.annotation.Transactional;
+ 
+ /**
+  * Polling event container polling for {@link TokenCounter} instances and updating atomic counters accordingly.
+  * 
+  * @author dotan
+- *
+  */
+ @EventDriven
+-@Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout=1000)
++@Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout = 1000)
+ @TransactionalEvent
+ public class GlobalTokenCounter {
+-
++    private static final Logger log = Logger.getLogger(GlobalTokenCounter.class.getName());
+     private static final int BATCH_SIZE = 100;
+ 
+-    Logger log= Logger.getLogger(this.getClass().getName());
+-
+     @Resource
+     GigaMap gigaMap;
+ 
+-	@ReceiveHandler 
++    @ReceiveHandler
+     ReceiveOperationHandler receiveHandler() {
+         MultiTakeReceiveOperationHandler receiveHandler = new MultiTakeReceiveOperationHandler();
+         receiveHandler.setMaxEntries(BATCH_SIZE);
+-        receiveHandler.setNonBlocking(true); 
+-        receiveHandler.setNonBlockingFactor(1); 
++        receiveHandler.setNonBlocking(true);
++        receiveHandler.setNonBlockingFactor(1);
+         return receiveHandler;
+     }
+ 
+     @EventTemplate
+     TokenCounter tokenCounter() {
+-    	TokenCounter template = new TokenCounter();
+-    	return template;
++        return new TokenCounter();
+     }
+-    
++
+     @SpaceDataEvent
+     public void eventListener(TokenCounter counter) {
+-    	String token = counter.getToken();
+-    	Integer count = counter.getCount();
+-    	log.info("incementing local token "+token+" by "+count);
+-    	incrementLocalToken(token, count);
++        String token = counter.getToken();
++        Integer count = counter.getCount();
++        log.info("incrementing local token " + token + " by " + count);
++        incrementLocalToken(token, count);
+     }
+ 
+-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, isolation  = Isolation.READ_COMMITTED)
++    @SuppressWarnings("unchecked")
++    @Transactional(readOnly = false, propagation = REQUIRED, isolation = READ_COMMITTED)
+     private void incrementLocalToken(String token, Integer count) {
+-    	Integer globalCount = gigaMap.containsKey(token) ? (Integer)gigaMap.get(token)+count : count;
+-    	gigaMap.put(token, globalCount);
+-    	log.fine("+++ token="+token+" count="+(Integer)gigaMap.get(token));
++        Integer globalCount = gigaMap.containsKey(token) ? (Integer) gigaMap.get(token) + count : count;
++        gigaMap.put(token, globalCount);
++        log.fine("+++ token=" + token + " count=" + (Integer) gigaMap.get(token));
+     }
+ 
+ }
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/LocalTokenCounter.java b/processor/src/main/java/org/openspaces/bigdata/processor/LocalTokenCounter.java
+index 038e29d..cd57b3a 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/LocalTokenCounter.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/LocalTokenCounter.java
+@@ -1,23 +1,26 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ package org.openspaces.bigdata.processor;
+ 
++import static com.j_spaces.core.client.UpdateModifiers.UPDATE_OR_WRITE;
++
+ import java.util.HashMap;
+ import java.util.Map;
++import java.util.Map.Entry;
+ import java.util.logging.Logger;
+ 
+ import javax.annotation.Resource;
+@@ -34,83 +37,76 @@ import org.openspaces.events.polling.ReceiveHandler;
+ import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
+ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
+ 
+-import com.j_spaces.core.client.UpdateModifiers;
+-
+ /**
+  * This polling container processor performs token count on bulks of {@link TokenizedTweet}
+  * 
+  * @author Dotan Horovits
+- *
+  */
+ @EventDriven
+ @Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 1000)
+ @TransactionalEvent
+ public class LocalTokenCounter {
++    private static final Logger log = Logger.getLogger(LocalTokenCounter.class.getName());
++    private static final int BATCH_SIZE = 5;
++    private static final int WRITE_TIMEOUT = 1000;
++    private static final int LEASE_TTL = 5000;
+ 
+-	private static final int WRITE_TIMEOUT = 1000;
+-	private static final int LEASE_TTL = 5000;
+-
+-	@Resource(name = "clusteredGigaSpace")
+-	GigaSpace clusteredGigaSpace;
+-
+-	@Resource(name = "gigaSpace")
+-	GigaSpace gigaSpace;
++    @Resource(name = "clusteredGigaSpace")
++    GigaSpace clusteredGigaSpace;
+ 
+-    Logger log= Logger.getLogger(this.getClass().getName());
++    @Resource(name = "gigaSpace")
++    GigaSpace gigaSpace;
+ 
+-    private static final int BATCH_SIZE = 5;
+-	
+-	@ReceiveHandler 
++    @ReceiveHandler
+     ReceiveOperationHandler receiveHandler() {
+         MultiTakeReceiveOperationHandler receiveHandler = new MultiTakeReceiveOperationHandler();
+         receiveHandler.setMaxEntries(BATCH_SIZE);
+         receiveHandler.setNonBlocking(true);
+-        receiveHandler.setNonBlockingFactor(1); 
++        receiveHandler.setNonBlockingFactor(1);
+         return receiveHandler;
+     }
+ 
+-
+-	/**
+-	 * This method returns the template of a filtered {@link TokenizedTweet}. 
+-	 * @return template for the event container
+-	 */
++    /**
++     * This method returns the template of a filtered {@link TokenizedTweet}.
++     * 
++     * @return template for the event container
++     */
+     @EventTemplate
+     TokenizedTweet tokenizedFilteredTweet() {
+-    	TokenizedTweet template = new TokenizedTweet();
+-    	template.setFiltered(true);
+-    	return template;
++        TokenizedTweet template = new TokenizedTweet();
++        template.setFiltered(true);
++        return template;
+     }
+-    
++
+     /**
+-	 * Event handler that takes a bulk of {@link TokenizedTweet}, counts appearances of tokens in the bulk,
+-	 * and generates a corresponding {@link TokenCounter} for each token.
+-     * @param tokenizedTweetArray array of {@link TokenizedTweet} matching the event template
++     * Event handler that takes a bulk of {@link TokenizedTweet}, counts appearances of tokens in the bulk, and generates a corresponding {@link TokenCounter}
++     * for each token.
++     * 
++     * @param tokenizedTweetArray
++     *            array of {@link TokenizedTweet} matching the event template
+      */
+     @SpaceDataEvent
+     public void eventListener(TokenizedTweet[] tokenizedTweetArray) {
+-
+-    	log.info("local counting of a bulk of "+tokenizedTweetArray.length+" tweets");
+-    	Map<String, Integer> tokenMap = new HashMap<String, Integer>();
+-    	for (int i = 0; i < tokenizedTweetArray.length; i++) {
+-    		log.fine("--processing "+tokenizedTweetArray[i]);
+-            for (Map.Entry<String, Integer> entry : tokenizedTweetArray[i].getTokenMap().entrySet()) {
+-            	String token = entry.getKey();
+-            	Integer count = entry.getValue();
+-            	log.finest("put token "+token+" with count "+(tokenMap.containsKey(token) ? tokenMap.get(token)+count : count));
+-            	tokenMap.put(token,  
+-            			(tokenMap.containsKey(token) ? tokenMap.get(token)+count : count));
++        log.info("local counting of a bulk of " + tokenizedTweetArray.length + " tweets");
++        Map<String, Integer> tokenMap = new HashMap<String, Integer>();
++        for (int i = 0; i < tokenizedTweetArray.length; i++) {
++            log.fine("--processing " + tokenizedTweetArray[i]);
++            for (Entry<String, Integer> entry : tokenizedTweetArray[i].getTokenMap().entrySet()) {
++                String token = entry.getKey();
++                Integer count = entry.getValue();
++                int p = tokenMap.containsKey(token) ? tokenMap.get(token) + count : count;
++                log.finest("put token " + token + " with count " + p);
++                tokenMap.put(token, p);
+             }
+-    	}
+-
+-        log.info("writing "+tokenMap.size()+" TokenCounters across the cluster");
+-    	for (Map.Entry<String, Integer> entry : tokenMap.entrySet()) {
+-        	String token = entry.getKey();
+-        	Integer count = entry.getValue();
+-        	TokenCounter tokenCounter = new TokenCounter(token, count);
+-        	log.fine("writing new TokenCounter: token="+tokenCounter.getToken()+", count="+tokenCounter.getCount());
+-	    	clusteredGigaSpace.write(tokenCounter,LEASE_TTL,WRITE_TIMEOUT,UpdateModifiers.UPDATE_OR_WRITE);
+         }
+ 
++        log.info("writing " + tokenMap.size() + " TokenCounters across the cluster");
++        for (Entry<String, Integer> entry : tokenMap.entrySet()) {
++            String token = entry.getKey();
++            Integer count = entry.getValue();
++            log.fine("writing new TokenCounter: token=" + token + ", count=" + count);
++            clusteredGigaSpace.write(new TokenCounter(token, count), LEASE_TTL, WRITE_TIMEOUT, UPDATE_OR_WRITE);
++        }
+     }
+ 
+ }
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/TokenFilter.java b/processor/src/main/java/org/openspaces/bigdata/processor/TokenFilter.java
+index 4a27b8f..06343c6 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/TokenFilter.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/TokenFilter.java
+@@ -17,6 +17,7 @@
+ package org.openspaces.bigdata.processor;
+ 
+ import java.util.Arrays;
++import java.util.HashMap;
+ import java.util.HashSet;
+ import java.util.Iterator;
+ import java.util.Map;
+@@ -38,88 +39,83 @@ import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
+ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
+ 
+ /**
+- * Event polling container processor filters out non-informative tokens, such as prepositions, 
+- * from non-filtered {@link TokenizedTweet} instances.
++ * Event polling container processor filters out non-informative tokens, such as prepositions, from non-filtered {@link TokenizedTweet} instances.
+  * 
+  * @author Dotan Horovits
+- *
++ * 
+  */
+ @EventDriven
+ @Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout = 5000)
+ @TransactionalEvent
+ public class TokenFilter {
++    private static final Logger log = Logger.getLogger(TokenFilter.class.getName());
++    private static final int BATCH_SIZE = 100;
+ 
+-	@Resource(name = "gigaSpace")
+-	GigaSpace gigaSpace;
+-
+-	Logger log= Logger.getLogger(this.getClass().getName());
++    @Resource(name = "gigaSpace")
++    GigaSpace gigaSpace;
+ 
+-	private static final int BATCH_SIZE = 100;
++    @PostConstruct
++    void postConstruct() {
++        log.info(this.getClass().getName() + " initialized");
++    }
+ 
+-	@PostConstruct
+-	void postConstruct() {
+-		log.info(this.getClass().getName()+" initialized");
+-	}
++    @ReceiveHandler
++    ReceiveOperationHandler receiveHandler() {
++        MultiTakeReceiveOperationHandler receiveHandler = new MultiTakeReceiveOperationHandler();
++        receiveHandler.setMaxEntries(BATCH_SIZE);
++        receiveHandler.setNonBlocking(true);
++        receiveHandler.setNonBlockingFactor(1);
++        return receiveHandler;
++    }
+ 
+-	@ReceiveHandler 
+-	ReceiveOperationHandler receiveHandler() {
+-		MultiTakeReceiveOperationHandler receiveHandler = new MultiTakeReceiveOperationHandler();
+-		receiveHandler.setMaxEntries(BATCH_SIZE);
+-		receiveHandler.setNonBlocking(true); 
+-		receiveHandler.setNonBlockingFactor(1); 
+-		return receiveHandler;
+-	}
++    /**
++     * This method returns the template of a non-filtered {@link TokenizedTweet}.
++     * 
++     * @return template for the event container
++     */
++    @EventTemplate
++    TokenizedTweet tokenizedNonFilteredTweet() {
++        TokenizedTweet template = new TokenizedTweet();
++        template.setFiltered(false);
++        return template;
++    }
+ 
++    /**
++     * Event handler that receives a {@link TokenizedTweet} and filters out non-informative tokens. Filtering is performed using
++     * {@link #isTokenRequireFilter(String))}
++     * 
++     * @param tokenizedTweet
++     * @return the input tokenizedTweet after modifications
++     */
++    @SpaceDataEvent
++    public TokenizedTweet eventListener(TokenizedTweet tokenizedTweet) {
++        log.info("filtering tweet " + tokenizedTweet.getId());
++        Map<String, Integer> tokenMap = new HashMap<String, Integer>(tokenizedTweet.getTokenMap());
++        int numTokensBefore = tokenMap.size();
++        Iterator<Map.Entry<String, Integer>> it = tokenMap.entrySet().iterator();
++        while (it.hasNext()) {
++            Map.Entry<String, Integer> entry = it.next();
++            if (isTokenRequireFilter(entry.getKey())) {
++                it.remove();
++            }
++        }
++        int numTokensAfter = tokenMap.size();
++        tokenizedTweet.setTokenMap(tokenMap);
++        tokenizedTweet.setFiltered(true);
++        log.fine("filtered out " + (numTokensBefore - numTokensAfter) + " tokens from tweet " + tokenizedTweet.getId());
++        return tokenizedTweet;
++    }
+ 
+-	/**
+-	 * This method returns the template of a non-filtered {@link TokenizedTweet}. 
+-	 * @return template for the event container
+-	 */
+-	@EventTemplate
+-	TokenizedTweet tokenizedNonFilteredTweet() {
+-		TokenizedTweet template = new TokenizedTweet();
+-		template.setFiltered(false);
+-		return template;
+-	}
++    private boolean isTokenRequireFilter(final String token) {
++        return filterTokensSet.contains(token);
++    }
+ 
+-	/**
+-	 * Event handler that receives a {@link TokenizedTweet} and filters out non-informative tokens.
+-	 * Filtering is performed using {@link #isTokenRequireFilter(String))}
+-	 * @param tokenizedTweet
+-	 * @return the input tokenizedTweet after modifications
+-	 */
+-	@SpaceDataEvent
+-	public TokenizedTweet eventListener(TokenizedTweet tokenizedTweet) {
+-		log.info("filtering tweet "+tokenizedTweet.getId());
+-		Map<String, Integer> tokenMap = 
+-			new java.util.HashMap<String, Integer>(tokenizedTweet.getTokenMap());
+-		int numTokensBefore = tokenMap.size();
+-		Iterator<Map.Entry<String, Integer>> it = tokenMap.entrySet().iterator();
+-		while (it.hasNext()) {
+-			Map.Entry<String, Integer> entry = it.next();
+-			if (isTokenRequireFilter(entry.getKey()))
+-				it.remove();
+-		}
+-		int numTokensAfter = tokenMap.size();
+-		tokenizedTweet.setTokenMap(tokenMap);
+-		tokenizedTweet.setFiltered(true);
+-		log.fine("filtered out "+(numTokensBefore-numTokensAfter)+" tokens from tweet "+tokenizedTweet.getId());
+-		return tokenizedTweet;
+-	}
++    final String[] englishPrepositionsArray = new String[] { "aboard", "about", "above", "across", "after", "against", "along", "amid", "among", "anti",
++            "around", "as", "at", "before", "behind", "below", "beneath", "beside", "besides", "between", "beyond", "but", "by", "concerning", "considering",
++            "despite", "down", "during", "except", "excepting", "excluding", "following", "for", "from", "in", "inside", "into", "like", "minus", "near", "of",
++            "off", "on", "onto", "opposite", "outside", "over", "past", "per", "plus", "regarding", "round", "save", "since", "than", "through", "to",
++            "toward", "under", "underneath", "unlike", "until", "up", "upon", "versus", "via", "with", "within", "without" };
+ 
+-	private boolean isTokenRequireFilter(final String token) {
+-		final String[] englishPrepositionsArray = new String[]{
+-				"aboard","about","above","across","after","against","along","amid",
+-				"among","anti","around","as","at","before","behind","below","beneath","beside",
+-				"besides","between","beyond","but","by","concerning","considering","despite","down",
+-				"during","except","excepting","excluding","following","for","from","in","inside",
+-				"into","like","minus","near","of","off","on","onto","opposite","outside",
+-				"over","past","per","plus","regarding","round","save","since","than","through",
+-				"to","toward","under","underneath","unlike","until","up","upon","versus","via",
+-				"with","within","without"
+-		};
+-		final Set<String> filterTokensSet = new HashSet<String>(Arrays.asList(englishPrepositionsArray));
+-		return (filterTokensSet.contains(token));
+-	}
++    final Set<String> filterTokensSet = new HashSet<String>(Arrays.asList(englishPrepositionsArray));
+ 
+ }
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/TweetParser.java b/processor/src/main/java/org/openspaces/bigdata/processor/TweetParser.java
+index 3eac7bd..c76eeb9 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/TweetParser.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/TweetParser.java
+@@ -1,21 +1,22 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ package org.openspaces.bigdata.processor;
+ 
++import java.util.HashMap;
+ import java.util.Map;
+ import java.util.StringTokenizer;
+ import java.util.logging.Logger;
+@@ -29,84 +30,75 @@ import org.openspaces.events.EventTemplate;
+ import org.openspaces.events.TransactionalEvent;
+ import org.openspaces.events.adapter.SpaceDataEvent;
+ import org.openspaces.events.polling.Polling;
+-import org.springframework.transaction.annotation.Isolation;
+ 
+-import com.gigaspaces.document.DocumentProperties;
+ import com.gigaspaces.document.SpaceDocument;
+ import com.j_spaces.core.client.SQLQuery;
+ 
+ /**
+  * This polling container processor parses raw tweets, generating TokenizedTweets.
+- * a raw tweet is represented by an instance of SpaceDocument of type "Tweet"
++ * <p>
++ * A raw tweet is represented by an instance of SpaceDocument of type "Tweet"
+  * 
+  * @author Dotan Horovits
+- *
+  */
+-
+ @EventDriven
+ @Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout = 60)
+ @TransactionalEvent(timeout = 100)
+ public class TweetParser {
+-	
+-	private static final int MIN_TOKEN_LENGTH = 3;
++    private static final Logger log = Logger.getLogger(TweetParser.class.getName());
++    private static final int MIN_TOKEN_LENGTH = 3;
+ 
+-	@Resource(name = "clusteredGigaSpace")
+-	GigaSpace clusteredGigaSpace;
++    @Resource(name = "clusteredGigaSpace")
++    GigaSpace clusteredGigaSpace;
+ 
+-	@Resource(name = "gigaSpace")
+-	GigaSpace gigaSpace;
++    @Resource(name = "gigaSpace")
++    GigaSpace gigaSpace;
+ 
+-    Logger log= Logger.getLogger(this.getClass().getName());
+-
+-	/**
+-	 * This method returns a SQL query defining an unprocessed Tweet. 
+-	 * @return {@link SQLQuery} of a {@link SpaceDocument} of type "Tweet"
+-	 */
++    /**
++     * This method returns a SQL query defining an unprocessed Tweet.
++     * 
++     * @return {@link SQLQuery} of a {@link SpaceDocument} of type "Tweet"
++     */
+     @EventTemplate
+     SQLQuery<SpaceDocument> unprocessedTweet() {
+-    	SQLQuery<SpaceDocument> query = 
+-    		new SQLQuery<SpaceDocument>("Tweet", "Processed = "+false);
+-    	return query;
++        return new SQLQuery<SpaceDocument>("Tweet", "Processed = " + false);
+     }
+ 
+     /**
+-     * Event handler that receives a Tweet instance, processes its text and 
+-     * generates a listing of the tokens appearing in the text and 
+-     * their respective count of appearance in the text, 
+-     * instantiates an instance of {@link TokenizedTweet} with this data,
+-     * and writes it to the space.
++     * Event handler that receives a Tweet instance, processes its text and generates a listing of the tokens appearing in the text and their respective count
++     * of appearance in the text, instantiates an instance of {@link TokenizedTweet} with this data, and writes it to the space.
++     * 
+      * @param tweet
+      * @return {@link TokenizedTweet} containing a mapping of {token->count}
+      */
+     @SpaceDataEvent
+     public SpaceDocument eventListener(SpaceDocument tweet) {
+-    	log.info("parsing tweet "+tweet);
++        log.info("parsing tweet " + tweet);
+ 
+-    	Long id = (Long)tweet.getProperty("Id");
+-    	String text = tweet.getProperty("Text");
+-    	if (text != null) {
+-    		Map<String, Integer> tokenMap = tokenize(text);
+-    		TokenizedTweet tt = new TokenizedTweet(id,tokenMap);
+-    		gigaSpace.write(tt);
+-    	}
+-    	
+-    	tweet.setProperty("Processed", true);
+-    	return tweet;
++        Long id = (Long) tweet.getProperty("Id");
++        String text = tweet.getProperty("Text");
++        if (text != null) {
++            Map<String, Integer> tokenMap = tokenize(text);
++            gigaSpace.write(new TokenizedTweet(id, tokenMap));
++        }
++
++        tweet.setProperty("Processed", true);
++        return tweet;
+     }
+ 
+     protected Map<String, Integer> tokenize(String text) {
+-    	Map<String, Integer> tokenMap = new java.util.HashMap<String, Integer>();
+-    	StringTokenizer st = new StringTokenizer(text,"\"{}[]:;|<>?`'.,/~!@#$%^&*()_-+= \t\n\r\f\\");
+-
+-    	while(st.hasMoreTokens()) { 
+-    		String token = st.nextToken();
+-    		if (token.length() < MIN_TOKEN_LENGTH) continue;
+-        	Integer count = tokenMap.get(token);
+-        	count = (count == null? 1 : count+1);
+-        	tokenMap.put(token, count);
+-    	}
+-    	return tokenMap;
++        Map<String, Integer> tokenMap = new HashMap<String, Integer>();
++        StringTokenizer st = new StringTokenizer(text, "\"{}[]:;|<>?`'.,/~!@#$%^&*()_-+= \t\n\r\f\\");
++
++        while (st.hasMoreTokens()) {
++            String token = st.nextToken();
++            if (token.length() < MIN_TOKEN_LENGTH) {
++                continue;
++            }
++            Integer count = tokenMap.get(token);
++            count = count == null ? 1 : count + 1;
++            tokenMap.put(token, count);
++        }
++        return tokenMap;
+     }
+-    
+-
+ }
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/TweetPersister.java b/processor/src/main/java/org/openspaces/bigdata/processor/TweetPersister.java
+index d2d8de3..3b2289b 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/TweetPersister.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/TweetPersister.java
+@@ -1,23 +1,26 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ package org.openspaces.bigdata.processor;
+ 
+-import com.gigaspaces.document.SpaceDocument;
+-import com.j_spaces.core.client.SQLQuery;
++import java.io.IOException;
++import java.util.logging.Logger;
++
++import javax.annotation.Resource;
++
+ import org.openspaces.events.EventDriven;
+ import org.openspaces.events.EventTemplate;
+ import org.openspaces.events.TransactionalEvent;
+@@ -28,62 +31,47 @@ import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
+ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
+ import org.springframework.beans.factory.annotation.Value;
+ 
+-import javax.annotation.PostConstruct;
+-import javax.annotation.Resource;
+-import java.io.IOException;
+-import java.util.logging.Logger;
++import com.gigaspaces.document.SpaceDocument;
++import com.j_spaces.core.client.SQLQuery;
+ 
+ /**
+  * This polling container processor removes processed tweets and persists it to an external data store
+  * 
+  * @author Dotan Horovits
+- *
+  */
+-
+ @EventDriven
+ @Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout = 10000)
+ @TransactionalEvent
+ public class TweetPersister {
+-	
+-    Logger log= Logger.getLogger(this.getClass().getName());
++    private static final Logger log = Logger.getLogger(TweetPersister.class.getName());
+ 
+     @Value("${batch.size}")
+     private int BATCH_SIZE = 100;
+ 
+     @Resource
+     private ExternalPersistence persister;
+-	
+-	@PostConstruct
+-	void postConstruct() throws IOException {
+-		log.info(this.getClass().getName()+" initialized");
+-	}
+ 
+-	@ReceiveHandler
++    @ReceiveHandler
+     ReceiveOperationHandler receiveHandler() {
+         MultiTakeReceiveOperationHandler receiveHandler = new MultiTakeReceiveOperationHandler();
+         receiveHandler.setMaxEntries(BATCH_SIZE);
+-        receiveHandler.setNonBlocking(true); 
+-        receiveHandler.setNonBlockingFactor(1); 
++        receiveHandler.setNonBlocking(true);
++        receiveHandler.setNonBlockingFactor(1);
+         return receiveHandler;
+     }
+ 
+     @EventTemplate
+     SQLQuery<SpaceDocument> processedTweet() {
+-    	SQLQuery<SpaceDocument> query =  new SQLQuery<SpaceDocument>("Tweet", "Processed = ?",true);
+-    	return query;
++        return new SQLQuery<SpaceDocument>("Tweet", "Processed = ?", true);
+     }
+ 
+     @SpaceDataEvent
+     public void eventListener(SpaceDocument[] tweetArray) {
+-    	
+-    	log.info("writing behind a bulk of "+tweetArray.length+" tweets to backend persistence store");
+-
+-		try {
+-			persister.writeBulk(tweetArray);
+-		} catch (IOException e) {
+-			log.severe("error persisting tweet bulk: "+e.getMessage());
+-		}
+-
++        log.info("writing behind a bulk of " + tweetArray.length + " tweets to backend persistence store");
++        try {
++            persister.writeBulk(tweetArray);
++        } catch (IOException e) {
++            log.severe("error persisting tweet bulk: " + e.getMessage());
++        }
+     }
+-    
+ }
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/events/TokenCounter.java b/processor/src/main/java/org/openspaces/bigdata/processor/events/TokenCounter.java
+index cbffeba..52a012a 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/events/TokenCounter.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/events/TokenCounter.java
+@@ -1,18 +1,18 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ package org.openspaces.bigdata.processor.events;
+ 
+@@ -22,33 +22,34 @@ import com.gigaspaces.annotation.pojo.SpaceRouting;
+ 
+ @SpaceClass
+ public class TokenCounter {
+-	
+-	private String token;
+-	private Integer count;
+-	
+-	public TokenCounter() {}
+-	
+-	public TokenCounter(String token, Integer count) {
+-		this.token = token;
+-		this.count = count;
+-	}
+-
+-	@SpaceId(autoGenerate=false)
+-	@SpaceRouting
+-	public String getToken() {
+-		return token;
+-	}
+-
+-	public void setToken(String token) {
+-		this.token = token;
+-	}
+-
+-	public Integer getCount() {
+-		return count;
+-	}
+-
+-	public void setCount(Integer count) {
+-		this.count = count;
+-	}
+-	
++
++    private String token;
++    private Integer count;
++
++    public TokenCounter() {
++    }
++
++    public TokenCounter(String token, Integer count) {
++        this.token = token;
++        this.count = count;
++    }
++
++    @SpaceId(autoGenerate = false)
++    @SpaceRouting
++    public String getToken() {
++        return token;
++    }
++
++    public void setToken(String token) {
++        this.token = token;
++    }
++
++    public Integer getCount() {
++        return count;
++    }
++
++    public void setCount(Integer count) {
++        this.count = count;
++    }
++
+ }
+diff --git a/processor/src/main/java/org/openspaces/bigdata/processor/events/TokenizedTweet.java b/processor/src/main/java/org/openspaces/bigdata/processor/events/TokenizedTweet.java
+index 252409d..b3acf96 100644
+--- a/processor/src/main/java/org/openspaces/bigdata/processor/events/TokenizedTweet.java
++++ b/processor/src/main/java/org/openspaces/bigdata/processor/events/TokenizedTweet.java
+@@ -1,18 +1,18 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
+ 
+ package org.openspaces.bigdata.processor.events;
+ 
+@@ -25,48 +25,51 @@ import com.gigaspaces.annotation.pojo.SpaceId;
+  * This class represents a tokenized version of a tweet.
+  * 
+  * @author Dotan Horovits
+- *
++ * 
+  */
+ @SpaceClass
+ public class TokenizedTweet {
+-	
+-	private Long id = null;
+-	private Map<String, Integer> tokenMap = null;
+-	private Boolean filtered = null;
+-	
+-	public TokenizedTweet(Long id, Map<String,Integer> tokenMap) {
+-		this.id = id;
+-		this.tokenMap = tokenMap;
+-		filtered = false;
+-	}
+-	
+-	public TokenizedTweet() {}
+-	
+-	public Boolean getFiltered() {
+-		return filtered;
+-	}
++    private Long id;
++    private Map<String, Integer> tokenMap;
++    private Boolean filtered;
++
++    public TokenizedTweet(Long id, Map<String, Integer> tokenMap) {
++        this.id = id;
++        this.tokenMap = tokenMap;
++        filtered = false;
++    }
++
++    public TokenizedTweet() {
++    }
++
++    public Boolean getFiltered() {
++        return filtered;
++    }
++
++    public void setFiltered(Boolean filtered) {
++        this.filtered = filtered;
++    }
++
++    @SpaceId(autoGenerate = false)
++    public Long getId() {
++        return id;
++    }
++
++    public void setId(Long id) {
++        this.id = id;
++    }
++
++    public Map<String, Integer> getTokenMap() {
++        return tokenMap;
++    }
+ 
+-	public void setFiltered(Boolean filtered) {
+-		this.filtered = filtered;
+-	}
++    public void setTokenMap(Map<String, Integer> tokenMap) {
++        this.tokenMap = tokenMap;
++    }
+ 
+-	@SpaceId(autoGenerate=false)
+-	public Long getId() {
+-		return id;
+-	}
+-	public void setId(Long id) {
+-		this.id = id;
+-	}
+-	public Map<String, Integer> getTokenMap() {
+-		return tokenMap;
+-	}
+-	public void setTokenMap(Map<String, Integer> tokenMap) {
+-		this.tokenMap = tokenMap;
+-	}
++    @Override
++    public String toString() {
++        return "TokenizedTweet [id=" + id + ", tokenMap=" + tokenMap + "]";
++    }
+ 
+-	@Override
+-	public String toString() {
+-		return "TokenizedTweet [id=" + id + ", tokenMap=" + tokenMap + "]";
+-	}
+-	
+ }
+diff --git a/processor/src/main/resources/META-INF/spring/pu.xml b/processor/src/main/resources/META-INF/spring/pu.xml
+index bd72833..cb9558b 100644
+--- a/processor/src/main/resources/META-INF/spring/pu.xml
++++ b/processor/src/main/resources/META-INF/spring/pu.xml
+@@ -11,18 +11,10 @@
+        http://www.openspaces.org/schema/core http://www.openspaces.org/schema/8.0/core/openspaces-core.xsd
+        http://www.openspaces.org/schema/events http://www.openspaces.org/schema/8.0/events/openspaces-events.xsd">
+ 
+-    <!--
+-        Spring property configurer which allows us to use system properties (such as user.name).
+-    -->
+-
+     <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:META-INF/spring/processor.properties"/>
+-
+-	<!-- Enable scan for OpenSpaces and Spring components -->
+ 	<context:component-scan base-package="org.openspaces.bigdata.processor" />
+-
+ 	<!-- Enable support for @Polling annotation -->
+ 	<os-events:annotation-support />
+-
+     <tx:annotation-driven transaction-manager="transactionManager"/>
+ 	
+     <!--
+@@ -37,33 +29,15 @@
+  			<os-core:routing property="Id" />
+ 			<os-core:basic-index path="Processed" />
+ 		</os-core:space-type>
+-<!-- 		<os-core:space-type type-name="ParsedTweet">
+-			<os-core:id property="Id" />
+- 			<os-core:routing property="Id" />
+-		</os-core:space-type>
+- -->
+  	</os-core:space>
+- 
+-    <!--
+-        Defines a distributed transaction manager.
+-    -->
+-     <os-core:distributed-tx-manager id="transactionManager" />
+-
+-    <!--
+-        OpenSpaces simplified space API built on top of IJSpace/JavaSpace.
+-    -->
++    <os-core:distributed-tx-manager id="transactionManager" />
+     <os-core:giga-space id="gigaSpace" space="space" tx-manager="transactionManager"/>
+-    
+     <os-core:giga-space id="clusteredGigaSpace" space="space" tx-manager="transactionManager" clustered="true"/>
+-    
+     <os-core:map id="map" space="space" />
+-
+ 	<os-core:giga-map id="gigaMap" map="map" tx-manager="transactionManager"/>
+ 
+-<!--     
+ 	<bean id="fileExternalPersistence" class="org.openspaces.bigdata.processor.FileExternalPersistence">
+ 		<constructor-arg index="0" value="tweetRepo.txt"/>
+ 	</bean>
+- -->
+-    <bean id="cassandraExternalPersister" class="org.openspaces.bigdata.processor.CassandraExternalPersistence"/>
++<!--     <bean id="cassandraExternalPersister" class="org.openspaces.bigdata.processor.CassandraExternalPersistence"/> -->
+ </beans>
+\ No newline at end of file
+diff --git a/processor/src/test/java/org/openspaces/bigdata/processor/TestCassandraPersistence.java b/processor/src/test/java/org/openspaces/bigdata/processor/TestCassandraPersistence.java
+index 3c4cd25..7e1b3b3 100644
+--- a/processor/src/test/java/org/openspaces/bigdata/processor/TestCassandraPersistence.java
++++ b/processor/src/test/java/org/openspaces/bigdata/processor/TestCassandraPersistence.java
+@@ -1,61 +1,47 @@
+ /*
+-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+-*
+-* Licensed under the Apache License, Version 2.0 (the "License");
+-* you may not use this file except in compliance with the License.
+-* You may obtain a copy of the License at
+-*
+-*      http://www.apache.org/licenses/LICENSE-2.0
+-*
+-* Unless required by applicable law or agreed to in writing, software
+-* distributed under the License is distributed on an "AS IS" BASIS,
+-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-* See the License for the specific language governing permissions and
+-* limitations under the License.
+-*/
+-
+-/**
+- * @author Uri Cohen
++ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
+  */
+ package org.openspaces.bigdata.processor;
+ 
+-import com.gigaspaces.document.SpaceDocument;
++import static java.lang.System.currentTimeMillis;
++
++import org.junit.Ignore;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.test.context.ContextConfiguration;
+ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+ 
+-/**
+- * Created by IntelliJ IDEA.
+- * User: uri1803
+- * Date: 1/21/12
+- * Time: 11:55 PM
+- * To change this template use File | Settings | File Templates.
+- */
+-
++import com.gigaspaces.document.SpaceDocument;
+ 
+ @RunWith(SpringJUnit4ClassRunner.class)
+ @ContextConfiguration
++@Ignore
+ public class TestCassandraPersistence {
+ 
+     @Autowired
+     private CassandraExternalPersistence persister;
+ 
+-
+     @Test
+     public void testPersistence() {
+-        Long id = System.currentTimeMillis();
+-        System.out.println("id = " + id);
+-        persister.write(new SpaceDocument("Tweet")
+-                .setProperty("Id", id)
+-                .setProperty("Text", "text")
+-                .setProperty("CreatedAt", "now")
+-                .setProperty("FromUserId", "uri1803")
++        Long id = currentTimeMillis();
++        persister.write(new SpaceDocument("Tweet") //
++                .setProperty("Id", id) //
++                .setProperty("Text", "text") //
++                .setProperty("CreatedAt", "now") //
++                .setProperty("FromUserId", "uri1803") //
+                 .setProperty("ToUserId", "natishalom"));
+-
+-
+-
+     }
+-
+ }
+diff --git a/processor/src/test/java/org/openspaces/bigdata/processor/TweetParserTest.java b/processor/src/test/java/org/openspaces/bigdata/processor/TweetParserTest.java
+index e1c2c36..39af728 100644
+--- a/processor/src/test/java/org/openspaces/bigdata/processor/TweetParserTest.java
++++ b/processor/src/test/java/org/openspaces/bigdata/processor/TweetParserTest.java
+@@ -5,13 +5,11 @@ import java.util.Map;
+ import org.junit.Test;
+ 
+ public class TweetParserTest {
+-	
+-	@Test
+-	public void testTokenize() {
+-
+-		String text = "Twitter is an online social networking service and microblogging service that enables its users to send and read text-based posts of up to 140 characters, known as \"tweets\".";
+-		Map<String, Integer> tokenMap = new TweetParser().tokenize(text);
+-		for (Map.Entry<String, Integer> e : tokenMap.entrySet())
+-		    System.out.println(e.getKey() + ": " + e.getValue());
+-	}
++    @Test
++    public void testTokenize() {
++        String text = "Twitter is an online social networking service and microblogging service that enables its users to send and read text-based posts of up to 140 characters, known as \"tweets\".";
++        Map<String, Integer> tokenMap = new TweetParser().tokenize(text);
++        for (Map.Entry<String, Integer> e : tokenMap.entrySet())
++            System.out.println(e.getKey() + ": " + e.getValue());
++    }
+ }
+diff --git a/processor/src/test/java/org/openspaces/bigdata/processor/WriteLocalCountBulkTest.java b/processor/src/test/java/org/openspaces/bigdata/processor/WriteLocalCountBulkTest.java
+index cd3842c..7a69250 100644
+--- a/processor/src/test/java/org/openspaces/bigdata/processor/WriteLocalCountBulkTest.java
++++ b/processor/src/test/java/org/openspaces/bigdata/processor/WriteLocalCountBulkTest.java
+@@ -1,13 +1,14 @@
+ package org.openspaces.bigdata.processor;
+ 
+-import java.util.Map;
++import static org.junit.Assert.assertEquals;
++import static org.junit.Assert.assertNotNull;
++
+ import java.util.logging.Logger;
+ 
+ import org.junit.After;
+-import org.junit.Test;
+ import org.junit.Before;
+-import org.junit.runner.*;
+-import static org.junit.Assert.*;
++import org.junit.Test;
++import org.junit.runner.RunWith;
+ import org.openspaces.bigdata.processor.events.TokenCounter;
+ import org.openspaces.core.GigaSpace;
+ import org.openspaces.core.GigaSpaceConfigurer;
+@@ -18,20 +19,20 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+ 
+ import com.j_spaces.core.IJSpace;
+ 
+-//@RunWith(SpringJUnit4ClassRunner.class)
+-//@ContextConfiguration(locations = "classpath:META-INF/spring/pu.xml")
++@RunWith(SpringJUnit4ClassRunner.class)
++@ContextConfiguration(locations = "classpath:META-INF/spring/pu.xml")
+ public class WriteLocalCountBulkTest {
+-    Logger log= Logger.getLogger(this.getClass().getName());
++    Logger log = Logger.getLogger(this.getClass().getName());
+ 
+-    //@Autowired
++    @Autowired
+     GigaSpace gigaSpace;
+ 
+     @Before
+     public void setupSpace() {
+-    	IJSpace space = new UrlSpaceConfigurer("/./testSpace").space();
+-    	gigaSpace = new GigaSpaceConfigurer(space).gigaSpace();
++        IJSpace space = new UrlSpaceConfigurer("/./testSpace").space();
++        gigaSpace = new GigaSpaceConfigurer(space).gigaSpace();
+     }
+-    
++
+     @After
+     public void clearSpace() {
+         gigaSpace.clear(null);
+@@ -39,19 +40,16 @@ public class WriteLocalCountBulkTest {
+ 
+     @Test
+     public void testWriteLocalCountBulk() {
+-    	Map<String, Integer> tokenMap = new java.util.HashMap<String, Integer>();
+-    	gigaSpace.write(new TokenCounter("foo", 3));
+-    	gigaSpace.write(new TokenCounter("bar", 8));
+-
+-       	log.info("reading TokenCounter");
+-       	TokenCounter template = new TokenCounter();
+-       	TokenCounter[] ret = gigaSpace.readMultiple(template);
+-    	
+-    	assertNotNull(ret);
+-    	assertEquals(2, ret.length);
+-    	assertNotNull(ret[0].getToken());
+-    	assertNotNull(ret[1].getToken());
+-  	
++        gigaSpace.write(new TokenCounter("foo", 3));
++        gigaSpace.write(new TokenCounter("bar", 8));
++
++        log.info("reading TokenCounter");
++        TokenCounter template = new TokenCounter();
++        TokenCounter[] ret = gigaSpace.readMultiple(template);
++
++        assertNotNull(ret);
++        assertEquals(2, ret.length);
++        assertNotNull(ret[0].getToken());
++        assertNotNull(ret[1].getToken());
+     }
+-	
+ }

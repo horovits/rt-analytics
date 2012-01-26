@@ -1,23 +1,26 @@
 /*
-* Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2012 GigaSpaces Technologies Ltd. All rights reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.openspaces.bigdata.processor;
 
+import static com.j_spaces.core.client.UpdateModifiers.UPDATE_OR_WRITE;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -34,83 +37,76 @@ import org.openspaces.events.polling.ReceiveHandler;
 import org.openspaces.events.polling.receive.MultiTakeReceiveOperationHandler;
 import org.openspaces.events.polling.receive.ReceiveOperationHandler;
 
-import com.j_spaces.core.client.UpdateModifiers;
-
 /**
  * This polling container processor performs token count on bulks of {@link TokenizedTweet}
  * 
  * @author Dotan Horovits
- *
  */
 @EventDriven
 @Polling(gigaSpace = "gigaSpace", passArrayAsIs = true, concurrentConsumers = 1, maxConcurrentConsumers = 1, receiveTimeout = 1000)
 @TransactionalEvent
 public class LocalTokenCounter {
-
-	private static final int WRITE_TIMEOUT = 1000;
-	private static final int LEASE_TTL = 5000;
-
-	@Resource(name = "clusteredGigaSpace")
-	GigaSpace clusteredGigaSpace;
-
-	@Resource(name = "gigaSpace")
-	GigaSpace gigaSpace;
-
-    Logger log= Logger.getLogger(this.getClass().getName());
-
+    private static final Logger log = Logger.getLogger(LocalTokenCounter.class.getName());
     private static final int BATCH_SIZE = 5;
-	
-	@ReceiveHandler 
+    private static final int WRITE_TIMEOUT = 1000;
+    private static final int LEASE_TTL = 5000;
+
+    @Resource(name = "clusteredGigaSpace")
+    GigaSpace clusteredGigaSpace;
+
+    @Resource(name = "gigaSpace")
+    GigaSpace gigaSpace;
+
+    @ReceiveHandler
     ReceiveOperationHandler receiveHandler() {
         MultiTakeReceiveOperationHandler receiveHandler = new MultiTakeReceiveOperationHandler();
         receiveHandler.setMaxEntries(BATCH_SIZE);
         receiveHandler.setNonBlocking(true);
-        receiveHandler.setNonBlockingFactor(1); 
+        receiveHandler.setNonBlockingFactor(1);
         return receiveHandler;
     }
 
-
-	/**
-	 * This method returns the template of a filtered {@link TokenizedTweet}. 
-	 * @return template for the event container
-	 */
+    /**
+     * This method returns the template of a filtered {@link TokenizedTweet}.
+     * 
+     * @return template for the event container
+     */
     @EventTemplate
     TokenizedTweet tokenizedFilteredTweet() {
-    	TokenizedTweet template = new TokenizedTweet();
-    	template.setFiltered(true);
-    	return template;
+        TokenizedTweet template = new TokenizedTweet();
+        template.setFiltered(true);
+        return template;
     }
-    
+
     /**
-	 * Event handler that takes a bulk of {@link TokenizedTweet}, counts appearances of tokens in the bulk,
-	 * and generates a corresponding {@link TokenCounter} for each token.
-     * @param tokenizedTweetArray array of {@link TokenizedTweet} matching the event template
+     * Event handler that takes a bulk of {@link TokenizedTweet}, counts appearances of tokens in the bulk, and generates a corresponding {@link TokenCounter}
+     * for each token.
+     * 
+     * @param tokenizedTweetArray
+     *            array of {@link TokenizedTweet} matching the event template
      */
     @SpaceDataEvent
     public void eventListener(TokenizedTweet[] tokenizedTweetArray) {
-
-    	log.info("local counting of a bulk of "+tokenizedTweetArray.length+" tweets");
-    	Map<String, Integer> tokenMap = new HashMap<String, Integer>();
-    	for (int i = 0; i < tokenizedTweetArray.length; i++) {
-    		log.fine("--processing "+tokenizedTweetArray[i]);
-            for (Map.Entry<String, Integer> entry : tokenizedTweetArray[i].getTokenMap().entrySet()) {
-            	String token = entry.getKey();
-            	Integer count = entry.getValue();
-            	log.finest("put token "+token+" with count "+(tokenMap.containsKey(token) ? tokenMap.get(token)+count : count));
-            	tokenMap.put(token,  
-            			(tokenMap.containsKey(token) ? tokenMap.get(token)+count : count));
+        log.info("local counting of a bulk of " + tokenizedTweetArray.length + " tweets");
+        Map<String, Integer> tokenMap = new HashMap<String, Integer>();
+        for (int i = 0; i < tokenizedTweetArray.length; i++) {
+            log.fine("--processing " + tokenizedTweetArray[i]);
+            for (Entry<String, Integer> entry : tokenizedTweetArray[i].getTokenMap().entrySet()) {
+                String token = entry.getKey();
+                Integer count = entry.getValue();
+                int p = tokenMap.containsKey(token) ? tokenMap.get(token) + count : count;
+                log.finest("put token " + token + " with count " + p);
+                tokenMap.put(token, p);
             }
-    	}
-
-        log.info("writing "+tokenMap.size()+" TokenCounters across the cluster");
-    	for (Map.Entry<String, Integer> entry : tokenMap.entrySet()) {
-        	String token = entry.getKey();
-        	Integer count = entry.getValue();
-        	TokenCounter tokenCounter = new TokenCounter(token, count);
-        	log.fine("writing new TokenCounter: token="+tokenCounter.getToken()+", count="+tokenCounter.getCount());
-	    	clusteredGigaSpace.write(tokenCounter,LEASE_TTL,WRITE_TIMEOUT,UpdateModifiers.UPDATE_OR_WRITE);
         }
 
+        log.info("writing " + tokenMap.size() + " TokenCounters across the cluster");
+        for (Entry<String, Integer> entry : tokenMap.entrySet()) {
+            String token = entry.getKey();
+            Integer count = entry.getValue();
+            log.fine("writing new TokenCounter: token=" + token + ", count=" + count);
+            clusteredGigaSpace.write(new TokenCounter(token, count), LEASE_TTL, WRITE_TIMEOUT, UPDATE_OR_WRITE);
+        }
     }
 
 }

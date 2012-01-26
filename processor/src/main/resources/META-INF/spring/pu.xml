@@ -11,18 +11,10 @@
        http://www.openspaces.org/schema/core http://www.openspaces.org/schema/8.0/core/openspaces-core.xsd
        http://www.openspaces.org/schema/events http://www.openspaces.org/schema/8.0/events/openspaces-events.xsd">
 
-    <!--
-        Spring property configurer which allows us to use system properties (such as user.name).
-    -->
-
     <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:META-INF/spring/processor.properties"/>
-
-	<!-- Enable scan for OpenSpaces and Spring components -->
 	<context:component-scan base-package="org.openspaces.bigdata.processor" />
-
 	<!-- Enable support for @Polling annotation -->
 	<os-events:annotation-support />
-
     <tx:annotation-driven transaction-manager="transactionManager"/>
 	
     <!--
@@ -37,33 +29,15 @@
  			<os-core:routing property="Id" />
 			<os-core:basic-index path="Processed" />
 		</os-core:space-type>
-<!-- 		<os-core:space-type type-name="ParsedTweet">
-			<os-core:id property="Id" />
- 			<os-core:routing property="Id" />
-		</os-core:space-type>
- -->
  	</os-core:space>
- 
-    <!--
-        Defines a distributed transaction manager.
-    -->
-     <os-core:distributed-tx-manager id="transactionManager" />
-
-    <!--
-        OpenSpaces simplified space API built on top of IJSpace/JavaSpace.
-    -->
+    <os-core:distributed-tx-manager id="transactionManager" />
     <os-core:giga-space id="gigaSpace" space="space" tx-manager="transactionManager"/>
-    
     <os-core:giga-space id="clusteredGigaSpace" space="space" tx-manager="transactionManager" clustered="true"/>
-    
     <os-core:map id="map" space="space" />
-
 	<os-core:giga-map id="gigaMap" map="map" tx-manager="transactionManager"/>
 
-<!--     
 	<bean id="fileExternalPersistence" class="org.openspaces.bigdata.processor.FileExternalPersistence">
 		<constructor-arg index="0" value="tweetRepo.txt"/>
 	</bean>
- -->
-    <bean id="cassandraExternalPersister" class="org.openspaces.bigdata.processor.CassandraExternalPersistence"/>
+<!--     <bean id="cassandraExternalPersister" class="org.openspaces.bigdata.processor.CassandraExternalPersistence"/> -->
 </beans>
