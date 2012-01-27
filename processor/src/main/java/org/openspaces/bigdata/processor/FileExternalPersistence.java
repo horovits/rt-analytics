@@ -17,6 +17,7 @@
 package org.openspaces.bigdata.processor;
 
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,7 +27,6 @@ import java.util.logging.Logger;
  * This is an {@link ExternalPersistence} implementation to a local file system.
  * 
  * @author Dotan Horovits
- * 
  */
 public class FileExternalPersistence implements ExternalPersistence {
 
@@ -58,20 +58,8 @@ public class FileExternalPersistence implements ExternalPersistence {
             bufferedWriter = new BufferedWriter(fileWritter);
             bufferedWriter.write(data.toString());
         } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (Exception ignore) {
-                    //
-                }
-            }
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (Exception ignore) {
-                    //
-                }
-            }
+            closeQuietly(fileWritter);
+            closeQuietly(bufferedWriter);
         }
     }
 
@@ -79,10 +67,20 @@ public class FileExternalPersistence implements ExternalPersistence {
     public void writeBulk(Object[] dataArray) throws IOException {
         if (dataArray.length < 1)
             return;
-        StringBuffer data = new StringBuffer("");
+        StringBuilder data = new StringBuilder("");
         for (Object obj : dataArray) {
             data.append(obj.toString()).append("\n");
         }
         write(data.toString());
+    }
+
+    private void closeQuietly(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception ignore) {
+                //
+            }
+        }
     }
 }

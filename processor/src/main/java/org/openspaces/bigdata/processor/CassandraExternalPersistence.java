@@ -53,8 +53,8 @@ public class CassandraExternalPersistence implements ExternalPersistence {
 
     @PostConstruct
     public void init() throws Exception {
-        log.info(format("initializing connection to Cassandra DB: host=%s port=%d keyspace=%s column-family=%s\n", host, port, keyspaceName,
-                columnFamily));
+        log.info(format("initializing connection to Cassandra DB: host=%s port=%d keyspace=%s column-family=%s\n" //
+                , host, port, keyspaceName, columnFamily));
         cluster = getOrCreateCluster(keyspaceName, host + ":" + port);
         keyspace = createKeyspace(keyspaceName, cluster);
     }

@@ -25,7 +25,6 @@ import com.gigaspaces.annotation.pojo.SpaceId;
  * This class represents a tokenized version of a tweet.
  * 
  * @author Dotan Horovits
- * 
  */
 @SpaceClass
 public class TokenizedTweet {

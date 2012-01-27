@@ -1,10 +1,8 @@
 package org.openspaces.bigdata.processor;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.fest.assertions.Assertions.assertThat;
 
-import java.util.logging.Logger;
-
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +20,7 @@ import com.j_spaces.core.IJSpace;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:META-INF/spring/pu.xml")
 public class WriteLocalCountBulkTest {
-    Logger log = Logger.getLogger(this.getClass().getName());
+    Logger log = Logger.getLogger(WriteLocalCountBulkTest.class);
 
     @Autowired
     GigaSpace gigaSpace;
@@ -39,17 +37,39 @@ public class WriteLocalCountBulkTest {
     }
 
     @Test
-    public void testWriteLocalCountBulk() {
-        gigaSpace.write(new TokenCounter("foo", 3));
-        gigaSpace.write(new TokenCounter("bar", 8));
+    public void saveTwoCountersAndRequestAll() {
+        TokenCounter foo = new TokenCounter("foo", 3);
+        TokenCounter bar = new TokenCounter("bar", 8);
+
+        gigaSpace.write(foo);
+        gigaSpace.write(bar);
 
         log.info("reading TokenCounter");
-        TokenCounter template = new TokenCounter();
-        TokenCounter[] ret = gigaSpace.readMultiple(template);
+        TokenCounter requestAll = new TokenCounter();
 
-        assertNotNull(ret);
-        assertEquals(2, ret.length);
-        assertNotNull(ret[0].getToken());
-        assertNotNull(ret[1].getToken());
+        assertThat(gigaSpace.readMultiple(requestAll)) //
+                .isNotNull() //
+                .hasSize(2) //
+                .contains(foo) //
+                .contains(bar);
     }
+
+    @Test
+    public void saveTwoCountersButRequestOnlyFoo() {
+        TokenCounter foo = new TokenCounter("foo", 3);
+        TokenCounter bar = new TokenCounter("bar", 8);
+
+        gigaSpace.write(foo);
+        gigaSpace.write(bar);
+
+        log.info("reading TokenCounter");
+        TokenCounter requestFoo = new TokenCounter();
+        requestFoo.setToken("foo");
+
+        assertThat(gigaSpace.readMultiple(requestFoo)) //
+                .isNotNull() //
+                .hasSize(1) //
+                .containsOnly(foo);
+    }
+
 }

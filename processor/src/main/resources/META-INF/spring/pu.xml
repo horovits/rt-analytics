@@ -13,13 +13,11 @@
 
     <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:META-INF/spring/processor.properties"/>
 	<context:component-scan base-package="org.openspaces.bigdata.processor" />
-	<!-- Enable support for @Polling annotation -->
-	<os-events:annotation-support />
     <tx:annotation-driven transaction-manager="transactionManager"/>
 	
+	<os-events:annotation-support />
     <!--
         A bean representing a space (an IJSpace implementation).
-
         Note, we do not specify here the cluster topology of the space. It is declated outside of
         the processing unit or within the SLA bean.
     -->
@@ -30,9 +28,12 @@
 			<os-core:basic-index path="Processed" />
 		</os-core:space-type>
  	</os-core:space>
+
     <os-core:distributed-tx-manager id="transactionManager" />
+
     <os-core:giga-space id="gigaSpace" space="space" tx-manager="transactionManager"/>
     <os-core:giga-space id="clusteredGigaSpace" space="space" tx-manager="transactionManager" clustered="true"/>
+
     <os-core:map id="map" space="space" />
 	<os-core:giga-map id="gigaMap" map="map" tx-manager="transactionManager"/>
 

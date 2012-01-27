@@ -16,21 +16,22 @@
 
 package org.openspaces.bigdata.feeder;
 
+import static java.lang.Runtime.getRuntime;
+import static java.util.concurrent.Executors.newScheduledThreadPool;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.openspaces.core.GigaSpace;
 import org.openspaces.core.SpaceInterruptedException;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -44,22 +45,24 @@ import com.gigaspaces.document.SpaceDocument;
  * 
  * @author Dotan Horovits
  */
-public class Feeder implements DisposableBean {
+public class Feeder {
     private Logger log = Logger.getLogger(Feeder.class.getSimpleName());
-    private static final int NUM_THREADS = 5;
+    
+    private static final int NUM_THREADS = getRuntime().availableProcessors() * 2;
 
-    private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(NUM_THREADS);
+    private ScheduledExecutorService executorService = newScheduledThreadPool(NUM_THREADS);
 
     private ScheduledFuture<?> sf;
 
-    @Value("${tweet.delayInMs:1000}")
-    private long numberOfUsers = 10;
+    @Value("${tweet.numberOfUsers:10}")
+    private int numberOfUsers = 10;
 
-    private long defaultDelay = 1000;
+    @Value("${tweet.delayInMs:1000}")
+    private int defaultDelay = 1000;
 
     private FeederTask feederTask = new FeederTask();
 
-    @Autowired(required = true)
+    @Autowired
     private List<String> tweetTextList;
 
     @Autowired
@@ -72,6 +75,7 @@ public class Feeder implements DisposableBean {
         sf = executorService.scheduleAtFixedRate(feederTask, defaultDelay, defaultDelay, TimeUnit.MILLISECONDS);
     }
 
+    @PreDestroy
     public void destroy() throws Exception {
         sf.cancel(false);
         sf = null;
@@ -88,16 +92,21 @@ public class Feeder implements DisposableBean {
 
         public void run() {
             try {
-                long toUserId = randomGenerator.nextInt((int) numberOfUsers), fromUserId = randomGenerator.nextInt((int) numberOfUsers);
-                SpaceDocument tweet = constructTweet(counter++, tweetTextList.get(randomGenerator.nextInt(tweetTextList.size())), new Date(), toUserId,
-                        fromUserId, false);
+                SpaceDocument tweet = buildRandomTweet();
                 gigaSpace.write(tweet);
                 log.fine("--- FEEDER WROTE " + tweet);
-            } catch (SpaceInterruptedException ignore) {
-                // ignore, we are being shutdown
+            } catch (SpaceInterruptedException e) {
+                log.fine("We are being shutdown " + e.getMessage());
             } catch (Exception e) {
-                e.printStackTrace();
+                log.warning(e.getMessage());
             }
+        }
+
+        private SpaceDocument buildRandomTweet() {
+            long toUserId = randomGenerator.nextInt(numberOfUsers);
+            long fromUserId = randomGenerator.nextInt(numberOfUsers);
+            String randomTweet = tweetTextList.get(randomGenerator.nextInt(tweetTextList.size()));
+            return buildTweet(counter++, randomTweet, new Date(), toUserId, fromUserId, false);
         }
 
         public long getCounter() {
@@ -105,7 +114,7 @@ public class Feeder implements DisposableBean {
         }
     }
 
-    public SpaceDocument constructTweet(long id, String text, Date createdAt, long toUserId, long fromUserId, boolean processed) {
+    public SpaceDocument buildTweet(long id, String text, Date createdAt, long toUserId, long fromUserId, boolean processed) {
         return new SpaceDocument("Tweet", new DocumentProperties() //
                 .setProperty("Id", id) //
                 .setProperty("Text", text) //
