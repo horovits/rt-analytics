@@ -6,7 +6,7 @@
         <artifactId>rt-analytics</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>fr-feeder</artifactId>
+    <artifactId>rt-feeder</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
     <properties>
