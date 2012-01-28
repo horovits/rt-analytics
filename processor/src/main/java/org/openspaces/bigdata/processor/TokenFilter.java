@@ -16,6 +16,8 @@
 
 package org.openspaces.bigdata.processor;
 
+import static org.openspaces.bigdata.processor.events.TokenizedTweet.newUnfilteredTokenizedTweet;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +44,6 @@ import org.openspaces.events.polling.receive.ReceiveOperationHandler;
  * Event polling container processor filters out non-informative tokens, such as prepositions, from non-filtered {@link TokenizedTweet} instances.
  * 
  * @author Dotan Horovits
- * 
  */
 @EventDriven
 @Polling(gigaSpace = "gigaSpace", concurrentConsumers = 2, maxConcurrentConsumers = 2, receiveTimeout = 5000)
@@ -75,9 +76,7 @@ public class TokenFilter {
      */
     @EventTemplate
     TokenizedTweet tokenizedNonFilteredTweet() {
-        TokenizedTweet template = new TokenizedTweet();
-        template.setFiltered(false);
-        return template;
+        return newUnfilteredTokenizedTweet();
     }
 
     /**

@@ -17,6 +17,7 @@
 package org.openspaces.bigdata.processor;
 
 import static com.j_spaces.core.client.UpdateModifiers.UPDATE_OR_WRITE;
+import static org.openspaces.bigdata.processor.events.TokenizedTweet.newFilteredTokenizedTweet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,30 +74,28 @@ public class LocalTokenCounter {
      */
     @EventTemplate
     TokenizedTweet tokenizedFilteredTweet() {
-        TokenizedTweet template = new TokenizedTweet();
-        template.setFiltered(true);
-        return template;
+        return newFilteredTokenizedTweet();
     }
 
     /**
      * Event handler that takes a bulk of {@link TokenizedTweet}, counts appearances of tokens in the bulk, and generates a corresponding {@link TokenCounter}
      * for each token.
      * 
-     * @param tokenizedTweetArray
+     * @param tokenizedTweets
      *            array of {@link TokenizedTweet} matching the event template
      */
     @SpaceDataEvent
-    public void eventListener(TokenizedTweet[] tokenizedTweetArray) {
-        log.info("local counting of a bulk of " + tokenizedTweetArray.length + " tweets");
+    public void eventListener(TokenizedTweet[] tokenizedTweets) {
+        log.info("local counting of a bulk of " + tokenizedTweets.length + " tweets");
         Map<String, Integer> tokenMap = new HashMap<String, Integer>();
-        for (int i = 0; i < tokenizedTweetArray.length; i++) {
-            log.fine("--processing " + tokenizedTweetArray[i]);
-            for (Entry<String, Integer> entry : tokenizedTweetArray[i].getTokenMap().entrySet()) {
+        for (TokenizedTweet tokenizedTweet : tokenizedTweets) {
+            log.fine("--processing " + tokenizedTweet);
+            for (Entry<String, Integer> entry : tokenizedTweet.getTokenMap().entrySet()) {
                 String token = entry.getKey();
                 Integer count = entry.getValue();
-                int p = tokenMap.containsKey(token) ? tokenMap.get(token) + count : count;
-                log.finest("put token " + token + " with count " + p);
-                tokenMap.put(token, p);
+                int newCount = tokenMap.containsKey(token) ? tokenMap.get(token) + count : count;
+                log.finest("put token " + token + " with count " + newCount);
+                tokenMap.put(token, newCount);
             }
         }
 
@@ -108,5 +107,4 @@ public class LocalTokenCounter {
             clusteredGigaSpace.write(new TokenCounter(token, count), LEASE_TTL, WRITE_TIMEOUT, UPDATE_OR_WRITE);
         }
     }
-
 }

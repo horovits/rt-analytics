@@ -35,10 +35,15 @@ public class TokenizedTweet {
     public TokenizedTweet(Long id, Map<String, Integer> tokenMap) {
         this.id = id;
         this.tokenMap = tokenMap;
-        filtered = false;
+        this.filtered = false;
+    }
+
+    private TokenizedTweet(boolean filtered) {
+        this.filtered = filtered;
     }
 
     public TokenizedTweet() {
+
     }
 
     public Boolean getFiltered() {
@@ -69,6 +74,14 @@ public class TokenizedTweet {
     @Override
     public String toString() {
         return "TokenizedTweet [id=" + id + ", tokenMap=" + tokenMap + "]";
+    }
+
+    public static TokenizedTweet newFilteredTokenizedTweet() {
+        return new TokenizedTweet(true);
+    }
+
+    public static TokenizedTweet newUnfilteredTokenizedTweet() {
+        return new TokenizedTweet(false);
     }
 
 }

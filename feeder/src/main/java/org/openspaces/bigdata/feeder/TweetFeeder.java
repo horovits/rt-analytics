@@ -60,9 +60,9 @@ public class TweetFeeder {
             @Override
             public void run() {
                 try {
-                    for (Tweet tweet : getTimeline()) {
-                        logTweet(tweet);
-                        gigaSpace.write(buildTweet(tweet));
+                    for (Tweet publicTweet : getPublicTimeline()) {
+                        logTweet(publicTweet);
+                        gigaSpace.write(buildTweet(publicTweet));
                     }
                 } catch (DataAccessException e) {
                     log.severe("error feeding tweets: " + e.getMessage());
@@ -84,7 +84,7 @@ public class TweetFeeder {
     /**
      * Return all the tweets from the Twitter API
      */
-    private List<Tweet> getTimeline() {
+    private List<Tweet> getPublicTimeline() {
         return new TwitterTemplate() //
                 .timelineOperations() //
                 .getPublicTimeline();

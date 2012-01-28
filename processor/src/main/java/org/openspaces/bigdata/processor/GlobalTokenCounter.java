@@ -66,18 +66,16 @@ public class GlobalTokenCounter {
 
     @SpaceDataEvent
     public void eventListener(TokenCounter counter) {
-        String token = counter.getToken();
-        Integer count = counter.getCount();
-        log.info("incrementing local token " + token + " by " + count);
-        incrementLocalToken(token, count);
+        incrementLocalToken(counter.getToken(), counter.getCount());
     }
 
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = false, propagation = REQUIRED, isolation = READ_COMMITTED)
     private void incrementLocalToken(String token, Integer count) {
+        log.info("incrementing local token " + token + " by " + count);
         Integer globalCount = gigaMap.containsKey(token) ? (Integer) gigaMap.get(token) + count : count;
         gigaMap.put(token, globalCount);
-        log.fine("+++ token=" + token + " count=" + (Integer) gigaMap.get(token));
+        log.fine("+++ token=" + token + " count=" + globalCount);
     }
 
 }

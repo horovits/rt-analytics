@@ -44,7 +44,6 @@ public class WriteLocalCountBulkTest {
         gigaSpace.write(foo);
         gigaSpace.write(bar);
 
-        log.info("reading TokenCounter");
         TokenCounter requestAll = new TokenCounter();
 
         assertThat(gigaSpace.readMultiple(requestAll)) //
@@ -62,14 +61,11 @@ public class WriteLocalCountBulkTest {
         gigaSpace.write(foo);
         gigaSpace.write(bar);
 
-        log.info("reading TokenCounter");
-        TokenCounter requestFoo = new TokenCounter();
-        requestFoo.setToken("foo");
+        TokenCounter requestFoo = new TokenCounter("foo");
 
         assertThat(gigaSpace.readMultiple(requestFoo)) //
                 .isNotNull() //
                 .hasSize(1) //
                 .containsOnly(foo);
     }
-
 }

@@ -17,6 +17,7 @@
 package org.openspaces.bigdata.feeder;
 
 import static java.lang.Runtime.getRuntime;
+import static java.lang.System.currentTimeMillis;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 
 import java.util.Date;
@@ -47,7 +48,7 @@ import com.gigaspaces.document.SpaceDocument;
  */
 public class Feeder {
     private Logger log = Logger.getLogger(Feeder.class.getSimpleName());
-    
+
     private static final int NUM_THREADS = getRuntime().availableProcessors() * 2;
 
     private ScheduledExecutorService executorService = newScheduledThreadPool(NUM_THREADS);
@@ -103,10 +104,12 @@ public class Feeder {
         }
 
         private SpaceDocument buildRandomTweet() {
-            long toUserId = randomGenerator.nextInt(numberOfUsers);
-            long fromUserId = randomGenerator.nextInt(numberOfUsers);
             String randomTweet = tweetTextList.get(randomGenerator.nextInt(tweetTextList.size()));
-            return buildTweet(counter++, randomTweet, new Date(), toUserId, fromUserId, false);
+            return buildTweet(counter++ //
+                    , randomTweet //
+                    , currentTimeMillis() //
+                    , randomGenerator.nextInt(numberOfUsers) //
+                    , randomGenerator.nextInt(numberOfUsers));
         }
 
         public long getCounter() {
@@ -114,14 +117,14 @@ public class Feeder {
         }
     }
 
-    public SpaceDocument buildTweet(long id, String text, Date createdAt, long toUserId, long fromUserId, boolean processed) {
+    public SpaceDocument buildTweet(long id, String text, long createdAt, long toUserId, long fromUserId) {
         return new SpaceDocument("Tweet", new DocumentProperties() //
                 .setProperty("Id", id) //
                 .setProperty("Text", text) //
-                .setProperty("CreatedAt", createdAt) //
+                .setProperty("CreatedAt", new Date(createdAt)) //
                 .setProperty("FromUserId", fromUserId) //
                 .setProperty("ToUserId", toUserId) //
-                .setProperty("Processed", processed));
+                .setProperty("Processed", false));
     }
 
 }

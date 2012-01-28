@@ -78,8 +78,7 @@ public class TweetParser {
         Long id = (Long) tweet.getProperty("Id");
         String text = tweet.getProperty("Text");
         if (text != null) {
-            Map<String, Integer> tokenMap = tokenize(text);
-            gigaSpace.write(new TokenizedTweet(id, tokenMap));
+            gigaSpace.write(new TokenizedTweet(id, tokenize(text)));
         }
 
         tweet.setProperty("Processed", true);

@@ -29,6 +29,10 @@ public class TokenCounter {
     public TokenCounter() {
     }
 
+    public TokenCounter(String token) {
+        this.token = token;
+    }
+
     public TokenCounter(String token, Integer count) {
         this.token = token;
         this.count = count;

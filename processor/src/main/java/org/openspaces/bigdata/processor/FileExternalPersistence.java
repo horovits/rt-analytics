@@ -58,20 +58,21 @@ public class FileExternalPersistence implements ExternalPersistence {
             bufferedWriter = new BufferedWriter(fileWritter);
             bufferedWriter.write(data.toString());
         } finally {
-            closeQuietly(fileWritter);
             closeQuietly(bufferedWriter);
+            closeQuietly(fileWritter);
         }
     }
 
     @Override
     public void writeBulk(Object[] dataArray) throws IOException {
-        if (dataArray.length < 1)
+        if (dataArray.length < 1) {
             return;
-        StringBuilder data = new StringBuilder("");
-        for (Object obj : dataArray) {
-            data.append(obj.toString()).append("\n");
         }
-        write(data.toString());
+        StringBuilder lines = new StringBuilder();
+        for (Object obj : dataArray) {
+            lines.append(obj).append("\n");
+        }
+        write(lines);
     }
 
     private void closeQuietly(Closeable closeable) {

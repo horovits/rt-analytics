@@ -9,11 +9,12 @@ import org.junit.Test;
 
 public class TweetParserTest {
     @Test
-    public void testTokenize() {
+    public void tokenize() {
         String text = "Twitter is an online social networking service and microblogging service" //
                 + " that enables its users to send and read text-based posts of up to 140 characters," //
                 + " known as \"tweets\". You can signup and test it yourself.";
         Map<String, Integer> tokenMap = new TweetParser().tokenize(text);
+        
         assertThat(tokenMap).hasSize(25);
         assertThat(tokenMap.get("microblogging")).isEqualTo(1);
         assertThat(tokenMap.get("and")).isEqualTo(3);
