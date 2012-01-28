@@ -16,13 +16,13 @@
 
 package org.openspaces.bigdata.processor;
 
+import static com.google.common.collect.Maps.newHashMap;
+import static com.google.common.collect.Sets.newHashSet;
 import static org.openspaces.bigdata.processor.events.TokenizedTweet.newUnfilteredTokenizedTweet;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -89,11 +89,11 @@ public class TokenFilter {
     @SpaceDataEvent
     public TokenizedTweet eventListener(TokenizedTweet tokenizedTweet) {
         log.info("filtering tweet " + tokenizedTweet.getId());
-        Map<String, Integer> tokenMap = new HashMap<String, Integer>(tokenizedTweet.getTokenMap());
+        Map<String, Integer> tokenMap = newHashMap(tokenizedTweet.getTokenMap());
         int numTokensBefore = tokenMap.size();
-        Iterator<Map.Entry<String, Integer>> it = tokenMap.entrySet().iterator();
+        Iterator<Entry<String, Integer>> it = tokenMap.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Integer> entry = it.next();
+            Entry<String, Integer> entry = it.next();
             if (isTokenRequireFilter(entry.getKey())) {
                 it.remove();
             }
@@ -109,12 +109,9 @@ public class TokenFilter {
         return filterTokensSet.contains(token);
     }
 
-    final String[] englishPrepositionsArray = new String[] { "aboard", "about", "above", "across", "after", "against", "along", "amid", "among", "anti",
+    private static final Set<String> filterTokensSet = newHashSet("aboard", "about", "above", "across", "after", "against", "along", "amid", "among", "anti",
             "around", "as", "at", "before", "behind", "below", "beneath", "beside", "besides", "between", "beyond", "but", "by", "concerning", "considering",
             "despite", "down", "during", "except", "excepting", "excluding", "following", "for", "from", "in", "inside", "into", "like", "minus", "near", "of",
             "off", "on", "onto", "opposite", "outside", "over", "past", "per", "plus", "regarding", "round", "save", "since", "than", "through", "to",
-            "toward", "under", "underneath", "unlike", "until", "up", "upon", "versus", "via", "with", "within", "without" };
-
-    final Set<String> filterTokensSet = new HashSet<String>(Arrays.asList(englishPrepositionsArray));
-
+            "toward", "under", "underneath", "unlike", "until", "up", "upon", "versus", "via", "with", "within", "without");
 }

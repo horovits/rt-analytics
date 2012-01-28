@@ -16,7 +16,8 @@
 
 package org.openspaces.bigdata.processor;
 
-import java.util.HashMap;
+import static com.google.common.collect.Maps.newHashMap;
+
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -86,7 +87,7 @@ public class TweetParser {
     }
 
     protected Map<String, Integer> tokenize(String text) {
-        Map<String, Integer> tokenMap = new HashMap<String, Integer>();
+        Map<String, Integer> tokenMap = newHashMap();
         StringTokenizer st = new StringTokenizer(text, "\"{}[]:;|<>?`'.,/~!@#$%^&*()_-+= \t\n\r\f\\");
 
         while (st.hasMoreTokens()) {
@@ -94,8 +95,7 @@ public class TweetParser {
             if (token.length() < MIN_TOKEN_LENGTH) {
                 continue;
             }
-            Integer count = tokenMap.get(token);
-            count = count == null ? 1 : count + 1;
+            Integer count = tokenMap.get(token) != null ? tokenMap.get(token) + 1 : 1;
             tokenMap.put(token, count);
         }
         return tokenMap;

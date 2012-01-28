@@ -16,10 +16,10 @@
 
 package org.openspaces.bigdata.processor;
 
+import static com.google.common.collect.Maps.newHashMap;
 import static com.j_spaces.core.client.UpdateModifiers.UPDATE_OR_WRITE;
 import static org.openspaces.bigdata.processor.events.TokenizedTweet.newFilteredTokenizedTweet;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
@@ -87,7 +87,7 @@ public class LocalTokenCounter {
     @SpaceDataEvent
     public void eventListener(TokenizedTweet[] tokenizedTweets) {
         log.info("local counting of a bulk of " + tokenizedTweets.length + " tweets");
-        Map<String, Integer> tokenMap = new HashMap<String, Integer>();
+        Map<String, Integer> tokenMap = newHashMap();
         for (TokenizedTweet tokenizedTweet : tokenizedTweets) {
             log.fine("--processing " + tokenizedTweet);
             for (Entry<String, Integer> entry : tokenizedTweet.getTokenMap().entrySet()) {

@@ -44,11 +44,11 @@
 				<artifactId>rt-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-	        <dependency>
-			    <groupId>org.springframework.social</groupId>
-			    <artifactId>spring-social-twitter</artifactId>
-		        <version>1.0.1.RELEASE</version>
-		    </dependency>
+			<dependency>
+				<groupId>org.springframework.social</groupId>
+				<artifactId>spring-social-twitter</artifactId>
+				<version>1.0.1.RELEASE</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.cassandra</groupId>
 				<artifactId>cassandra-all</artifactId>
@@ -58,6 +58,11 @@
 				<groupId>me.prettyprint</groupId>
 				<artifactId>hector-core</artifactId>
 				<version>1.0-2</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>11.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -87,27 +92,27 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-	            <plugin>
-	                <artifactId>maven-assembly-plugin</artifactId>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.2-beta-2</version>
-	                <configuration>
-	                    <appendAssemblyId>false</appendAssemblyId>
-	                    <attach>false</attach>
-	                    <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
-	                    <descriptors>
-	                        <descriptor>${basedir}/src/main/assembly/assembly.xml</descriptor>
-	                    </descriptors>
-	                </configuration>
-	                <executions>
-	                    <execution>
-	                        <id>assembly</id>
-	                        <phase>package</phase>
-	                        <goals>
-	                            <goal>single</goal>
-	                        </goals>
-	                    </execution>
-	                </executions>
-	            </plugin>
+					<configuration>
+						<appendAssemblyId>false</appendAssemblyId>
+						<attach>false</attach>
+						<ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+						<descriptors>
+							<descriptor>${basedir}/src/main/assembly/assembly.xml</descriptor>
+						</descriptors>
+					</configuration>
+					<executions>
+						<execution>
+							<id>assembly</id>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>

@@ -16,9 +16,12 @@
 
 package org.openspaces.bigdata.processor.events;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+
 import com.gigaspaces.annotation.pojo.SpaceClass;
 import com.gigaspaces.annotation.pojo.SpaceId;
 import com.gigaspaces.annotation.pojo.SpaceRouting;
+import com.google.common.base.Objects;
 
 @SpaceClass
 public class TokenCounter {
@@ -58,27 +61,17 @@ public class TokenCounter {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((token == null) ? 0 : token.hashCode());
-        return result;
+        return Objects.hashCode(token);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (!(obj instanceof TokenCounter)) {
             return false;
-        if (getClass() != obj.getClass())
-            return false;
-        TokenCounter other = (TokenCounter) obj;
-        if (token == null) {
-            if (other.token != null)
-                return false;
-        } else if (!token.equals(other.token))
-            return false;
-        return true;
+        }
+        return new EqualsBuilder().append(token, ((TokenCounter) obj).token).isEquals();
     }
-
 }
