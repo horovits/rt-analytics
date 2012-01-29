@@ -51,4 +51,7 @@ within the processor module). Next, build the feeder and processor PUs using Mav
 will generate the processor.jar and the feeder.jar.
 Run the GS-UI in order to deploy the jars and see the PU instances deployed.
 
+in order to automatically deploy and manage via Cloudify:
+run Cloudify CLI, bootstrap localcloud for running on your own machine (for deployment to cloud - check the documentation),
+then execute install-application with path to the rt_app directory.
 
