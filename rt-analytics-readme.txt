@@ -34,8 +34,8 @@ The example uses Maven 2 as its build tool. Just follow the standard build lifec
 processor and the feeder PUs.
 
 Manual deployment:
-	You can run the example manually by launching Cassandra (see instructions below) and deploying the PUs onto the service grid using 
-	the GS-UI or GS CLI (see instructions below).
+	You can run the example manually by downloading, installing, configuring and launching Cassandra (see instructions below), 
+	launching the Service Grid, and deploying the PUs onto the service grid using the GS-UI or GS CLI (see instructions below).
 
 Automatic deployment:
 	You can use GigaSpaces Cloudify (see instructions below) to automatically download, configure and deploy Cassandra, bootstrap the 
