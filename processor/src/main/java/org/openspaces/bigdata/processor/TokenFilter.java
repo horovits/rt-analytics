@@ -18,7 +18,6 @@ package org.openspaces.bigdata.processor;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.openspaces.bigdata.processor.events.TokenizedTweet.newUnfilteredTokenizedTweet;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -76,7 +75,9 @@ public class TokenFilter {
      */
     @EventTemplate
     TokenizedTweet tokenizedNonFilteredTweet() {
-        return newUnfilteredTokenizedTweet();
+        TokenizedTweet template = new TokenizedTweet();
+        template.setFiltered(false);
+        return template;
     }
 
     /**

@@ -18,7 +18,6 @@ package org.openspaces.bigdata.processor;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static com.j_spaces.core.client.UpdateModifiers.UPDATE_OR_WRITE;
-import static org.openspaces.bigdata.processor.events.TokenizedTweet.newFilteredTokenizedTweet;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -74,7 +73,9 @@ public class LocalTokenCounter {
      */
     @EventTemplate
     TokenizedTweet tokenizedFilteredTweet() {
-        return newFilteredTokenizedTweet();
+        TokenizedTweet template = new TokenizedTweet();
+        template.setFiltered(true);
+        return template;
     }
 
     /**

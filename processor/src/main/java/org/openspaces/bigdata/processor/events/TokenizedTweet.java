@@ -38,12 +38,7 @@ public class TokenizedTweet {
         this.filtered = false;
     }
 
-    private TokenizedTweet(boolean filtered) {
-        this.filtered = filtered;
-    }
-
     public TokenizedTweet() {
-
     }
 
     public Boolean getFiltered() {
@@ -75,13 +70,4 @@ public class TokenizedTweet {
     public String toString() {
         return "TokenizedTweet [id=" + id + ", tokenMap=" + tokenMap + "]";
     }
-
-    public static TokenizedTweet newFilteredTokenizedTweet() {
-        return new TokenizedTweet(true);
-    }
-
-    public static TokenizedTweet newUnfilteredTokenizedTweet() {
-        return new TokenizedTweet(false);
-    }
-
 }
