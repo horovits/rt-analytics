@@ -79,7 +79,6 @@ public class Feeder {
     @PreDestroy
     public void destroy() throws Exception {
         sf.cancel(false);
-        sf = null;
         executorService.shutdown();
     }
 
