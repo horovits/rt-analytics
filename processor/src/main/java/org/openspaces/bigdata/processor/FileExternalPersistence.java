@@ -79,8 +79,8 @@ public class FileExternalPersistence implements ExternalPersistence {
         if (closeable != null) {
             try {
                 closeable.close();
-            } catch (Exception ignore) {
-                //
+            } catch (Exception e) {
+                log.warning(e.getMessage());
             }
         }
     }
