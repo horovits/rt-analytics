@@ -30,10 +30,10 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 
 import org.openspaces.core.GigaSpace;
 import org.openspaces.core.SpaceInterruptedException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.gigaspaces.document.DocumentProperties;
@@ -63,10 +63,10 @@ public class Feeder {
 
     private FeederTask feederTask = new FeederTask();
 
-    @Autowired
+    @Resource
     private List<String> tweetTextList;
 
-    @Autowired
+    @Resource
     private GigaSpace gigaSpace;
 
     @PostConstruct

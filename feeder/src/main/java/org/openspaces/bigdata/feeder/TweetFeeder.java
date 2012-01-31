@@ -22,9 +22,9 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.openspaces.core.GigaSpace;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.social.twitter.api.Tweet;
@@ -43,7 +43,7 @@ import com.gigaspaces.document.SpaceDocument;
 @Component
 public class TweetFeeder {
     private static final Logger log = Logger.getLogger(TweetFeeder.class.getName());
-    @Autowired
+    @Resource
     private GigaSpace gigaSpace;
     @Value("${tweet.delayInMs:1000}")
     private int delayInMs = 1000;
