@@ -14,9 +14,6 @@ import com.gigaspaces.annotation.pojo.SpaceRouting;
 @SpaceClass
 public class Data {
 
-	//test comment
-	//test//////
-	
     private String id;
 
     private Long type;
@@ -27,13 +24,10 @@ public class Data {
 
     private Boolean processed;
 
-    //test
-
     /**
      * Constructs a new Data object.
      */
     public Data() {
-
     }
 
     /**
