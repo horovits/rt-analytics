@@ -95,7 +95,7 @@ public class TweetParser {
             if (token.length() < MIN_TOKEN_LENGTH) {
                 continue;
             }
-            Integer count = tokenMap.get(token) != null ? tokenMap.get(token) + 1 : 1;
+            Integer count = tokenMap.containsKey(token) ? tokenMap.get(token) + 1 : 1;
             tokenMap.put(token, count);
         }
         return tokenMap;
