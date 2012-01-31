@@ -14,6 +14,7 @@
     <context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:META-INF/spring/processor.properties"/>
 	<context:component-scan base-package="org.openspaces.bigdata.processor" />
 	
+	<!-- Enable support for @Polling annotation -->
 	<os-events:annotation-support />
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
