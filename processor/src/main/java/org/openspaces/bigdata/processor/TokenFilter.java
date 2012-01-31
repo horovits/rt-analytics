@@ -82,7 +82,7 @@ public class TokenFilter {
 
     /**
      * Event handler that receives a {@link TokenizedTweet} and filters out non-informative tokens. Filtering is performed using
-     * {@link #isTokenRequireFilter(String))}
+     * {@link #isTokenRequireFilter(String)}
      * 
      * @param tokenizedTweet
      * @return the input tokenizedTweet after modifications
