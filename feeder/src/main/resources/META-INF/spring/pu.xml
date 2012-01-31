@@ -13,27 +13,10 @@
        http://www.openspaces.org/schema/remoting http://www.openspaces.org/schema/8.0/remoting/openspaces-remoting.xsd
        http://www.openspaces.org/schema/sla http://www.openspaces.org/schema/8.0/sla/openspaces-sla.xsd">
 
-
-    <!--
-        Spring propery configurer which allows us to use system properties (such as user.name).
-    -->
-    <bean id="propertiesConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="properties">
-            <props>
-                <prop key="numberOfUsers">100</prop>
-            </props>
-        </property>
-    </bean>
-
-    <!-- Enable scan for OpenSpaces and Spring components -->
-    <context:component-scan base-package="org.openspaces.bigdata.common" />
-	<!--  Enables Spring Annotation configuration  -->
-<!--     <context:annotation-config /> -->
-    
-
+	<context:property-placeholder location="classpath:feeder.properties" />
+    <context:component-scan base-package="org.openspaces.bigdata" />
     <!--
         A bean representing a space (an IJSpace implementation).
-
         Note, we perform a lookup on the space since we are working against a remote space.
     -->
     <os-core:space id="space" url="jini://*/*/space" />
@@ -46,15 +29,12 @@
     <!--
         The Data feeder bean, writing new Data objects to the space in a constant interval.
     -->
-<!-- 
+    
+	<!-- 
     <bean id="simulatedTweetFeeder" class="org.openspaces.bigdata.feeder.Feeder" depends-on="gigaSpace">
         <property name="numberOfUsers" value="${numberOfUsers}" />
     </bean>
- -->
- 	<bean id="tweetFeeder" class="org.openspaces.bigdata.feeder.TweetFeeder">
- 		<property name="delay" value="1000"/>
- 		<property name="period" value="1000"/>
- 	</bean>
+	 -->
 	
 	<bean id="tweetTextList" class="java.util.LinkedList">
 		<constructor-arg>
