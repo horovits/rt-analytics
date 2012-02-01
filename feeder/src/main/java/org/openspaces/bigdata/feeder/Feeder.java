@@ -51,7 +51,7 @@ public class Feeder {
 
     private static final int NUM_THREADS = getRuntime().availableProcessors() * 2;
 
-    private ScheduledExecutorService executorService = newScheduledThreadPool(NUM_THREADS);
+    private ScheduledExecutorService executorService;
 
     private ScheduledFuture<?> sf;
 
@@ -61,7 +61,7 @@ public class Feeder {
     @Value("${tweet.delayInMs:1000}")
     private int defaultDelay = 1000;
 
-    private FeederTask feederTask = new FeederTask();
+    private FeederTask feederTask;
 
     @Resource
     private List<String> tweetTextList;
@@ -73,6 +73,8 @@ public class Feeder {
     void onPostConstruct() throws Exception {
         log.info("tweet list size: " + tweetTextList.size());
         log.info("--- STARTING FEEDER WITH CYCLE [" + defaultDelay + "]");
+        feederTask = new FeederTask();
+        executorService = newScheduledThreadPool(NUM_THREADS);
         sf = executorService.scheduleAtFixedRate(feederTask, defaultDelay, defaultDelay, TimeUnit.MILLISECONDS);
     }
 
