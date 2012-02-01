@@ -13,7 +13,7 @@
        http://www.openspaces.org/schema/remoting http://www.openspaces.org/schema/8.0/remoting/openspaces-remoting.xsd
        http://www.openspaces.org/schema/sla http://www.openspaces.org/schema/8.0/sla/openspaces-sla.xsd">
 
-	<context:property-placeholder location="classpath:feeder.properties" />
+	<context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:META-INF/spring/feeder.properties"/>
     <context:component-scan base-package="org.openspaces.bigdata" />
     <!--
         A bean representing a space (an IJSpace implementation).
