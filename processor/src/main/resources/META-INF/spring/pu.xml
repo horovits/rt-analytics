@@ -40,8 +40,11 @@
     <os-core:map id="map" space="space" />
 	<os-core:giga-map id="gigaMap" map="map" tx-manager="transactionManager"/>
 
+	<!-- fileExternalPersistence is meant for testing purposes, and persists to a file in the local file system -->
 	<bean id="fileExternalPersistence" class="org.openspaces.bigdata.processor.FileExternalPersistence">
 		<constructor-arg index="0" value="tweetRepo.txt"/>
 	</bean>
+
+	<!-- cassandraExternalPersister persists to a cassandra DB -->
 <!--     <bean id="cassandraExternalPersister" class="org.openspaces.bigdata.processor.CassandraExternalPersistence"/> -->
 </beans>
