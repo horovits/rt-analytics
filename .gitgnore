@@ -18,3 +18,5 @@ nb-configuration.xml
 nbactions.xml
 
 target/
+
+tweetRepo.txt
