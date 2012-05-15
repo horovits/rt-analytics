@@ -53,6 +53,16 @@ public class TwitterHomeTimelineFeederTask implements Runnable {
         }
     }
 
+    public SpaceDocument buildTweet(Tweet tweet) {
+        return new SpaceDocument("Tweet", new DocumentProperties() //
+                .setProperty("Id", tweet.getId()) //
+                .setProperty("Text", tweet.getText()) //
+                .setProperty("CreatedAt", tweet.getCreatedAt()) //
+                .setProperty("FromUserId", tweet.getFromUserId()) //
+                .setProperty("ToUserId", tweet.getToUserId()) //
+                .setProperty("Processed", Boolean.FALSE));
+    }
+
     /**
      * Return all the tweets from the Twitter API
      */
@@ -64,16 +74,6 @@ public class TwitterHomeTimelineFeederTask implements Runnable {
 
     private void logTweet(Tweet tweet) {
         log.fine(String.format("Tweet id=%d\tfromUser=%s\ttext=%s \n", tweet.getId(), tweet.getFromUser(), tweet.getText()));
-    }
-
-    public SpaceDocument buildTweet(Tweet tweet) {
-        return new SpaceDocument("Tweet", new DocumentProperties() //
-                .setProperty("Id", tweet.getId()) //
-                .setProperty("Text", tweet.getText()) //
-                .setProperty("CreatedAt", tweet.getCreatedAt()) //
-                .setProperty("FromUserId", tweet.getFromUserId()) //
-                .setProperty("ToUserId", tweet.getToUserId()) //
-                .setProperty("Processed", Boolean.FALSE));
     }
 
 
