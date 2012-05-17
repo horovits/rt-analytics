@@ -1,5 +1,9 @@
 #  Real Time Analytics for Big Data with GigaSpaces
 
+## In Depth Tutorial 
+
+for this application can be found here: http://www.gigaspaces.com/wiki/display/XAP9/Writing+a+Real+Time+Analytics+for+Big+Data+Application.
+
 ## Usecase
 
 Twitter timeline analytics ! 
