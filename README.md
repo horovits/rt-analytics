@@ -1,3 +1,5 @@
+IMPORTANT NOTE: This project has moved to a new repo - https://github.com/Gigaspaces/rt-analytics
+
 #  Real Time Analytics for Big Data with GigaSpaces
 
 ## Usecase
