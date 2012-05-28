@@ -4,6 +4,10 @@ This project has moved to a new repo - https://github.com/Gigaspaces/rt-analytic
 
 #  Real Time Analytics for Big Data with GigaSpaces
 
+## In Depth Tutorial 
+
+An in-depth tutorial for this application can be found [here](http://www.gigaspaces.com/wiki/display/XAP9/Writing+a+Real+Time+Analytics+for+Big+Data+Application).
+
 ## Usecase
 
 Twitter timeline analytics ! 
