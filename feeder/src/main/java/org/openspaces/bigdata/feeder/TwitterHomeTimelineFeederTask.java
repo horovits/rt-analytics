@@ -16,59 +16,41 @@
 
 package org.openspaces.bigdata.feeder;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Logger;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
+import com.gigaspaces.document.DocumentProperties;
+import com.gigaspaces.document.SpaceDocument;
 import org.openspaces.core.GigaSpace;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Component;
 
-import com.gigaspaces.document.DocumentProperties;
-import com.gigaspaces.document.SpaceDocument;
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
- * A feeder bean that connects to Twitter, retrieves the public timeline tweets, converts them to standard Tweet SpaceDocument format, and writes them to the
- * remote space.
- * 
- * @author Dotan Horovits
+ *
+ * A {{Runnable}} implementation that connects to Twitter, retrieves the public timeline tweets, converts them to standard Tweet
+ * SpaceDocument format, and writes them to a remote space.
+ *
  */
 @Component
-public class TweetFeeder {
-    private static final Logger log = Logger.getLogger(TweetFeeder.class.getName());
+public class TwitterHomeTimelineFeederTask implements Runnable {
+    private Logger log = Logger.getLogger(getClass().getSimpleName());
+
+
     @Resource
     private GigaSpace gigaSpace;
-    @Value("${tweet.delayInMs:1000}")
-    private int delayInMs = 1000;
-    @Value("${tweet.periodInMs:1000}")
-    private int periodInMs = 1000;
 
-    public static void main(String[] args) {
-        new TweetFeeder().execute();
-    }
-
-    @PostConstruct
-    public void execute() {
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    for (Tweet publicTweet : getPublicTimeline()) {
-                        logTweet(publicTweet);
-                        gigaSpace.write(buildTweet(publicTweet));
-                    }
-                } catch (DataAccessException e) {
-                    log.severe("error feeding tweets: " + e.getMessage());
-                }
+    public void run() {
+        try {
+            for (Tweet publicTweet : getPublicTimeline()) {
+                logTweet(publicTweet);
+                gigaSpace.write(buildTweet(publicTweet));
             }
-        }, delayInMs, periodInMs);
+        } catch (DataAccessException e) {
+            log.severe("error feeding tweets: " + e.getMessage());
+        }
     }
 
     public SpaceDocument buildTweet(Tweet tweet) {
@@ -93,4 +75,6 @@ public class TweetFeeder {
     private void logTweet(Tweet tweet) {
         log.fine(String.format("Tweet id=%d\tfromUser=%s\ttext=%s \n", tweet.getId(), tweet.getFromUser(), tweet.getText()));
     }
+
+
 }

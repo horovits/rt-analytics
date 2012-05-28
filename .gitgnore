@@ -1,0 +1,22 @@
+## intellij ignores
+.idea/
+*.iml
+
+
+
+## eclipse ignores
+.project
+.classpath
+.settings
+*/.project
+*/.classpath
+*/.settings
+*/eclipse-build
+
+## netbeans ignores
+nb-configuration.xml
+nbactions.xml
+
+target/
+
+tweetRepo.txt

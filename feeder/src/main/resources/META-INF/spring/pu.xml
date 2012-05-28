@@ -14,7 +14,7 @@
        http://www.openspaces.org/schema/sla http://www.openspaces.org/schema/8.0/sla/openspaces-sla.xsd">
 
 	<context:property-placeholder system-properties-mode="OVERRIDE" location="classpath:META-INF/spring/feeder.properties"/>
-    <context:component-scan base-package="org.openspaces.bigdata" />
+    <context:component-scan base-package="org.openspaces.bigdata.feeder" />
     <!--
         A bean representing a space (an IJSpace implementation).
         Note, we perform a lookup on the space since we are working against a remote space.
@@ -26,16 +26,10 @@
     -->
     <os-core:giga-space id="gigaSpace" space="space"/>
 
-    <!--
-        The Data feeder bean, writing new Data objects to the space in a constant interval.
-    -->
-    
-	<!-- 
-    <bean id="simulatedTweetFeeder" class="org.openspaces.bigdata.feeder.Feeder" depends-on="gigaSpace">
-        <property name="numberOfUsers" value="${numberOfUsers}" />
+    <bean name="taskScheduler" class="org.openspaces.bigdata.feeder.TaskScheduler">
+        <property name="delayInMs" value="${tweet.delayInMs:1000}"/>
     </bean>
-	 -->
-	
+
 	<bean id="tweetTextList" class="java.util.LinkedList">
 		<constructor-arg>
 			<list>
