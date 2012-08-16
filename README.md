@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/Gigaspaces / rt-analytics.png)](http://travis-ci.org/Gigaspaces/rt-analytics)
+
 #  Real Time Analytics for Big Data with GigaSpaces
 
 ## In Depth Tutorial 
