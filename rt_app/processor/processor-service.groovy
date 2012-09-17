@@ -2,6 +2,7 @@ service {
   icon "icon.png"
   name "processor"
   numInstances 2
+  maxAllowedInstances 2
   statefulProcessingUnit {
     binaries "rt-analytics-processor.jar"   		
     sla {
